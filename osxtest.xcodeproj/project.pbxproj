@@ -11,6 +11,8 @@
 		3B18F3CD189EDC1B004FD6FB /* test.vert in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B18F3C6189EDBD7004FD6FB /* test.vert */; };
 		3B5B623F188C64580058FC38 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B5B623E188C64580058FC38 /* SDL2.framework */; };
 		3B5B6241188C66280058FC38 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B5B6240188C66280058FC38 /* OpenGL.framework */; };
+		3BE1A82018A19DB8009D18C0 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BE1A81F18A19DB8009D18C0 /* SDL2_ttf.framework */; };
+		3BE1A82418A1A2E9009D18C0 /* arial.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3BE1A82318A1A2E2009D18C0 /* arial.ttf */; };
 		3BFEEBC6188880E200AA90C9 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3BFEEBC5188880E200AA90C9 /* main.cpp */; };
 		3BFEEBC8188880E200AA90C9 /* osxtest.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3BFEEBC7188880E200AA90C9 /* osxtest.1 */; };
 /* End PBXBuildFile section */
@@ -31,6 +33,7 @@
 			dstPath = resources;
 			dstSubfolderSpec = 7;
 			files = (
+				3BE1A82418A1A2E9009D18C0 /* arial.ttf in CopyFiles */,
 				3B18F3CC189EDC1B004FD6FB /* test.frag in CopyFiles */,
 				3B18F3CD189EDC1B004FD6FB /* test.vert in CopyFiles */,
 			);
@@ -305,6 +308,8 @@
 		3B18F4D3189F0704004FD6FB /* xstream.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xstream.hpp; sourceTree = "<group>"; };
 		3B5B623E188C64580058FC38 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		3B5B6240188C66280058FC38 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		3BE1A81F18A19DB8009D18C0 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = ../../../../../Library/Frameworks/SDL2_ttf.framework; sourceTree = "<group>"; };
+		3BE1A82318A1A2E2009D18C0 /* arial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = arial.ttf; sourceTree = "<group>"; };
 		3BFEEBC2188880E200AA90C9 /* osxtest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = osxtest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BFEEBC5188880E200AA90C9 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		3BFEEBC7188880E200AA90C9 /* osxtest.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = osxtest.1; sourceTree = "<group>"; };
@@ -322,6 +327,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3BE1A82018A19DB8009D18C0 /* SDL2_ttf.framework in Frameworks */,
 				3B5B6241188C66280058FC38 /* OpenGL.framework in Frameworks */,
 				3B5B623F188C64580058FC38 /* SDL2.framework in Frameworks */,
 			);
@@ -333,6 +339,7 @@
 		3B18F3C4189EDBD7004FD6FB /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				3BE1A82318A1A2E2009D18C0 /* arial.ttf */,
 				3B18F3C5189EDBD7004FD6FB /* test.frag */,
 				3B18F3C6189EDBD7004FD6FB /* test.vert */,
 			);
@@ -633,9 +640,10 @@
 		3BFEEBB9188880E100AA90C9 = {
 			isa = PBXGroup;
 			children = (
-				3B18F3D4189F0703004FD6FB /* glm */,
 				3B5B6240188C66280058FC38 /* OpenGL.framework */,
 				3B5B623E188C64580058FC38 /* SDL2.framework */,
+				3BE1A81F18A19DB8009D18C0 /* SDL2_ttf.framework */,
+				3B18F3D4189F0703004FD6FB /* glm */,
 				3BFEEBC4188880E200AA90C9 /* osxtest */,
 				3BFEEBC3188880E200AA90C9 /* Products */,
 			);
