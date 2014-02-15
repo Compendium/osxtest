@@ -40,7 +40,8 @@ int main(int argc, const char * argv[])
 
     // load font.ttf at size 16 into font
     TTF_Font *font;
-    font=TTF_OpenFont("resources/arial.ttf", 56);
+    int font_height = 256;
+    font=TTF_OpenFont("resources/hiragino.otf", font_height);
     if(!font) {
         printf("TTF_OpenFont: %s\n", TTF_GetError());
         // handle error
@@ -52,47 +53,89 @@ int main(int argc, const char * argv[])
     //std::printf("\"%s\" with glsl version \"%s\" rendering on \"%s\"\n", glGetString(GL_VERSION), glGetString(GL_SHADING_LANGUAGE_VERSION), glGetString(GL_RENDERER));
     
     glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
     
     // Render some UTF8 text in solid white to a new surface
     // then blit to the upper left of the screen
     // then free the text surface
-    SDL_Color color={255,0,255};
+    SDL_Color color={255,255,255};
     SDL_Surface *text_surface;
+    int text_width = 0, text_height = 0;
     unsigned int text_glref;
-    if(!(text_surface=TTF_RenderText_Solid(font, "Hello World!", color))) {
+    if(!(text_surface=TTF_RenderText_Blended(font, "Hello World!", color))) {
         //handle error here, perhaps print TTF_GetError at least
     } else {
-        //SDL_FillRect(text_surface, NULL, 0xffffffff);
-        SDL_SaveBMP(text_surface, "surface.bmp");
-        int colors = text_surface->format->BytesPerPixel;
-        int texture_format;
-        if (colors == 4) {   // alpha
-            if (text_surface->format->Rmask == 0x000000ff)
-                texture_format = GL_RGBA;
-            else
-                texture_format = GL_BGRA;
-        } else {             // no alpha
-            if (text_surface->format->Rmask == 0x000000ff)
-                texture_format = GL_RGB;
-            else
-                texture_format = GL_BGR;
+        SDL_SaveBMP(text_surface, "render.bmp");
+        GLuint texture;			// This is a handle to our texture object
+        SDL_Surface *surface;	// This surface will tell us the details of the image
+        GLenum texture_format = -1;
+        GLint  nOfColors;
+        
+        if ( (surface = text_surface/*SDL_CreateRGBSurface(0, 128, 128, 32, 0, 0, 0, 0)*/) ) {
+            /*for (int x = 0; x < 128; x++) {
+                for (int y = 0; y < 128; y++) {
+                    ((unsigned int*)surface->pixels)[x + y * 128] = x+y + 0x00ff0000;
+                }
+            }*/
+            // Check that the image's width is a power of 2
+            if ( (surface->w & (surface->w - 1)) != 0 ) {
+                printf("warning: image width is not a power of 2\n");
+            }
+            
+            // Also check if the height is a power of 2
+            if ( (surface->h & (surface->h - 1)) != 0 ) {
+                printf("warning: image height is not a power of 2\n");
+            }
+            
+            text_height = surface->h;
+            text_width = surface->w;
+            
+            // get the number of channels in the SDL surface
+            nOfColors = surface->format->BytesPerPixel;
+            if (nOfColors == 4)     // contains an alpha channel
+            {
+                if (surface->format->Rmask == 0x000000ff)
+                    texture_format = GL_RGBA;
+                else
+                    texture_format = GL_BGRA;
+            } else if (nOfColors == 3)     // no alpha channel
+            {
+                if (surface->format->Rmask == 0x000000ff)
+                    texture_format = GL_RGB;
+                else
+                    texture_format = GL_BGR;
+            } else {
+                printf("warning: the image is not truecolor..  this will probably break\n");
+                // this error should not go unhandled
+            }
+            
+            // Have OpenGL generate a texture object handle for us
+            glGenTextures( 1, &texture );
+            
+            // Bind the texture object
+            glBindTexture( GL_TEXTURE_2D, texture );
+            
+            // Set the texture's stretching properties
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+            
+            // Edit the texture object's image data using the information SDL_Surface gives us
+            glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, surface->w, surface->h, 0,
+                         texture_format, GL_UNSIGNED_BYTE, surface->pixels );
+        } 
+        else {
+            printf("SDL could not load image.bmp: %s\n", SDL_GetError());
+            SDL_Quit();
+            return 1;
+        }    
+        
+        // Free the SDL_Surface only if it was successfully created
+        if ( surface ) { 
+            SDL_FreeSurface( surface );
         }
-        
-        unsigned int ret;
-        glActiveTexture(GL_TEXTURE0);
-        glGenTextures(1, &ret);
-        glBindTexture(GL_TEXTURE_2D, ret);
-        
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,     GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,     GL_CLAMP_TO_EDGE);
-        
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, text_surface->w, text_surface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, text_surface->pixels);
-        
-        text_glref = ret;
-        
-        //SDL_FreeSurface(text_surface);
+        text_glref = texture;
     }
     
     int w, h, pw, ph;
@@ -203,8 +246,9 @@ int main(int argc, const char * argv[])
     
     
     
-    glm::mat4 Projection = glm::perspectiveFov(90.0f, (float)pw, (float)ph, 1.0f, 1000.0f);
-    glm::mat4 ViewTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
+    //glm::mat4 Projection = glm::perspectiveFov(90.0f, (float)pw, (float)ph, 1.0f, 1000.0f);
+    glm::mat4 Projection = glm::ortho(-(pw/2.f), +(pw/2.f), -(ph/2.f), +(ph/2.f));
+    glm::mat4 ViewTranslate = glm::mat4();//glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
     glm::mat4 View = ViewTranslate;
     glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
     glm::mat4 MVP = Projection * View * Model;
@@ -218,15 +262,17 @@ int main(int argc, const char * argv[])
     const unsigned int attrib_vertpos = glGetAttribLocation(shaderGLPtr, "attrib_vertexpos");
     const unsigned int attrib_texpos = glGetAttribLocation(shaderGLPtr, "attrib_texpos");
 
+    //ph, pw, text_height, text_width
+    
     /* Vertices of two triangles forming a quad (counter-clockwise winding) */
     float data[] = {
-        0.0, 0.0, 0.0,    0.0, 0.0,
-        10.0, 0.0, 0.0,   1.0, 0.0,
-        0.0, 10.0, 0.0,    0.0, 1.0,
+        0.0, 0.0, 0.0,    0.0, 1.0,
+        (float)text_width, 0.0, 0.0,   1.0, 1.0,
+        0.0, (float)text_height, 0.0,    0.0, 0.0,
         
-        10.0, 10.0, 0.0,    1.0, 1.0,
-        0.0, 10.0, 0.0,   0.0, 1.0,
-        10.0, 0.0, 0.0,    1.0, 0.0,
+        (float)text_width, (float)text_height, 0.0,    1.0, 0.0,
+        0.0, (float)text_height, 0.0,   0.0, 0.0,
+        (float)text_width, 0.0, 0.0,    1.0, 1.0,
     };
     
     /* Create a new VBO and use the variable "triangleVBO" to store the VBO id */
@@ -292,7 +338,7 @@ int main(int argc, const char * argv[])
             /* Actually draw the triangle, giving the number of vertices provided by invoke glDrawArrays
              while telling that our data is a triangle and we want to draw 0-3 vertices
              */
-            glDrawArrays(GL_TRIANGLES, 0, 9);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
             
             SDL_GL_SwapWindow(window);  // Swap the window/buffer to display the result.
             SDL_Delay(15);              // Pause briefly before moving on to the next cycle.

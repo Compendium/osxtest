@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B0FDB4418AFF14800047FB4 /* hiragino.otf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B0FDB4318AFF13C00047FB4 /* hiragino.otf */; };
 		3B18F3CC189EDC1B004FD6FB /* test.frag in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B18F3C5189EDBD7004FD6FB /* test.frag */; };
 		3B18F3CD189EDC1B004FD6FB /* test.vert in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B18F3C6189EDBD7004FD6FB /* test.vert */; };
 		3B5B623F188C64580058FC38 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B5B623E188C64580058FC38 /* SDL2.framework */; };
@@ -33,6 +34,7 @@
 			dstPath = resources;
 			dstSubfolderSpec = 7;
 			files = (
+				3B0FDB4418AFF14800047FB4 /* hiragino.otf in CopyFiles */,
 				3BE1A82418A1A2E9009D18C0 /* arial.ttf in CopyFiles */,
 				3B18F3CC189EDC1B004FD6FB /* test.frag in CopyFiles */,
 				3B18F3CD189EDC1B004FD6FB /* test.vert in CopyFiles */,
@@ -52,6 +54,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3B0FDB4318AFF13C00047FB4 /* hiragino.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = hiragino.otf; sourceTree = "<group>"; };
 		3B18F3B7189ED307004FD6FB /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B18F3C5189EDBD7004FD6FB /* test.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = test.frag; sourceTree = "<group>"; };
 		3B18F3C6189EDBD7004FD6FB /* test.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = test.vert; sourceTree = "<group>"; };
@@ -339,6 +342,7 @@
 		3B18F3C4189EDBD7004FD6FB /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				3B0FDB4318AFF13C00047FB4 /* hiragino.otf */,
 				3BE1A82318A1A2E2009D18C0 /* arial.ttf */,
 				3B18F3C5189EDBD7004FD6FB /* test.frag */,
 				3B18F3C6189EDBD7004FD6FB /* test.vert */,
