@@ -5,7 +5,6 @@
 //	Created by Alexander on 16/01/14.
 //	Copyright (c) 2014 Alexander. All rights reserved.
 //
-
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -25,9 +24,30 @@ int main(int argc, const char * argv[])
 {
 	SDL_Init(SDL_INIT_VIDEO); // Init SDL2
 	
-	// Create a window. Window mode MUST include SDL_WINDOW_OPENGL for use with OpenGL.
+	// Create a window containing an OpenGL context, also allow HighDPI settings
+	// on devices that support it
 	SDL_Window *window = SDL_CreateWindow(
-										  "SDL2/OpenGL Demo", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+										  "OpenGL test, よ",
+										  SDL_WINDOWPOS_UNDEFINED,
+										  SDL_WINDOWPOS_UNDEFINED,
+										  1280,
+										  720,
+										  SDL_WINDOW_OPENGL |
+										  SDL_WINDOW_RESIZABLE |
+										  SDL_WINDOW_ALLOW_HIGHDPI);
+	
+	// Create an OpenGL context associated with the window.
+	SDL_GLContext glcontext = SDL_GL_CreateContext(window);
+	
+	std::printf("\"%s\" with glsl version \"%s\" rendering on \"%s\"\n",
+				glGetString(GL_VERSION),
+				glGetString(GL_SHADING_LANGUAGE_VERSION),
+				glGetString(GL_RENDERER));
+	
+	int w, h, pw, ph;
+	SDL_GetWindowSize(window, &w, &h);
+	SDL_GL_GetDrawableSize(window, &pw, &ph);
+	printf("winodwsize: %ix%i (actual: %ix%i)\n", w, h, pw, ph);
 	
 	if(TTF_Init()==-1) {
 		printf("TTF_Init: %s\n", TTF_GetError());
@@ -38,19 +58,15 @@ int main(int argc, const char * argv[])
 		exit(1);
 	}
 	
-	// load font.ttf at size 16 into font
 	TTF_Font *font;
-	int font_height = 256;
+	int font_height = ph*0.1; //size in pixels, make text appear the same size
+	//on all resolutions
+	std::printf("font_height: %i\n", font_height);
 	font=TTF_OpenFont("resources/hiragino.otf", font_height);
 	if(!font) {
 		printf("TTF_OpenFont: %s\n", TTF_GetError());
 		// handle error
 	}
-	
-	// Create an OpenGL context associated with the window.
-	SDL_GLContext glcontext = SDL_GL_CreateContext(window);
-	
-	//std::printf("\"%s\" with glsl version \"%s\" rendering on \"%s\"\n", glGetString(GL_VERSION), glGetString(GL_SHADING_LANGUAGE_VERSION), glGetString(GL_RENDERER));
 	
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
@@ -61,75 +77,76 @@ int main(int argc, const char * argv[])
 	// then blit to the upper left of the screen
 	// then free the text surface
 	SDL_Color color={255,255,255};
-	SDL_Surface *text_surface;
+	SDL_Surface *surface;
 	int text_width = 0, text_height = 0;
 	unsigned int text_glref;
-	if(!(text_surface=TTF_RenderText_Blended(font, "Hello World!", color))) {
-		//handle error here, perhaps print TTF_GetError at least
+	string text = "世界こんにちは！";
+	string renderer =
+		string(reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+	
+	text += "\n(rendering on:\n";
+	text += renderer;
+	text += ")";
+	text += "font size: ";
+	text += std::to_string(font_height);
+	text += "px";
+	
+	surface=TTF_RenderUTF8_Blended_Wrapped(font, text.c_str(), color, pw*2);
+	
+	if(!surface) {
+		std::printf("TTF_RenderUTF8_Blended_Wrapped error; %s\n",
+					TTF_GetError());
 	} else {
-		SDL_SaveBMP(text_surface, "render.bmp");
 		GLuint texture;			// This is a handle to our texture object
-		SDL_Surface *surface;	// This surface will tell us the details of the image
 		GLenum texture_format = -1;
 		GLint  nOfColors;
 		
-		if ( (surface = text_surface/*SDL_CreateRGBSurface(0, 128, 128, 32, 0, 0, 0, 0)*/) ) {
-			/*for (int x = 0; x < 128; x++) {
-			 for (int y = 0; y < 128; y++) {
-			 ((unsigned int*)surface->pixels)[x + y * 128] = x+y + 0x00ff0000;
-			 }
-			 }*/
-			// Check that the image's width is a power of 2
-			if ( (surface->w & (surface->w - 1)) != 0 ) {
-				printf("warning: image width is not a power of 2\n");
-			}
-			
-			// Also check if the height is a power of 2
-			if ( (surface->h & (surface->h - 1)) != 0 ) {
-				printf("warning: image height is not a power of 2\n");
-			}
-			
-			text_height = surface->h;
-			text_width = surface->w;
-			
-			// get the number of channels in the SDL surface
-			nOfColors = surface->format->BytesPerPixel;
-			if (nOfColors == 4)		// contains an alpha channel
-			{
-				if (surface->format->Rmask == 0x000000ff)
-					texture_format = GL_RGBA;
-				else
-					texture_format = GL_BGRA;
-			} else if (nOfColors == 3)	   // no alpha channel
-			{
-				if (surface->format->Rmask == 0x000000ff)
-					texture_format = GL_RGB;
-				else
-					texture_format = GL_BGR;
-			} else {
-				printf("warning: the image is not truecolor..  this will probably break\n");
-				// this error should not go unhandled
-			}
-			
-			// Have OpenGL generate a texture object handle for us
-			glGenTextures( 1, &texture );
-			
-			// Bind the texture object
-			glBindTexture( GL_TEXTURE_2D, texture );
-			
-			// Set the texture's stretching properties
-			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-			
-			// Edit the texture object's image data using the information SDL_Surface gives us
-			glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, surface->w, surface->h, 0,
-						 texture_format, GL_UNSIGNED_BYTE, surface->pixels );
+		// Check that the image's width is a power of 2
+		if ( (surface->w & (surface->w - 1)) != 0 ) {
+			printf("warning: image width is not a power of 2\n");
 		}
-		else {
-			printf("SDL could not load image.bmp: %s\n", SDL_GetError());
-			SDL_Quit();
-			return 1;
+		
+		// Also check if the height is a power of 2
+		if ( (surface->h & (surface->h - 1)) != 0 ) {
+			printf("warning: image height is not a power of 2\n");
 		}
+		
+		text_height = surface->h;
+		text_width = surface->w;
+		
+		// get the number of channels in the SDL surface
+		nOfColors = surface->format->BytesPerPixel;
+		if (nOfColors == 4)		// contains an alpha channel
+		{
+			if (surface->format->Rmask == 0x000000ff)
+				texture_format = GL_RGBA;
+			else
+				texture_format = GL_BGRA;
+		} else if (nOfColors == 3)	   // no alpha channel
+		{
+			if (surface->format->Rmask == 0x000000ff)
+				texture_format = GL_RGB;
+			else
+				texture_format = GL_BGR;
+		} else {
+			printf("warning: the image is not truecolor..\
+				   this will probably break\n");
+			// this error should not go unhandled
+		}
+		
+		// Have OpenGL generate a texture object handle for us
+		glGenTextures( 1, &texture );
+		
+		// Bind the texture object
+		glBindTexture( GL_TEXTURE_2D, texture );
+		
+		// Set the texture's stretching properties
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+		
+		// Edit the texture object's image data using the information SDL_Surface gives us
+		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, surface->w, surface->h, 0,
+					 texture_format, GL_UNSIGNED_BYTE, surface->pixels );
 		
 		// Free the SDL_Surface only if it was successfully created
 		if ( surface ) {
@@ -137,13 +154,6 @@ int main(int argc, const char * argv[])
 		}
 		text_glref = texture;
 	}
-	
-	int w, h, pw, ph;
-	SDL_GetWindowSize(window, &w, &h);
-	SDL_GL_GetDrawableSize(window, &pw, &ph);
-	
-	printf("winodwsize: %ix%i (actual: %ix%i)\n", w, h, pw, ph);
-	
 	
 	int shaderGLPtr = 0;
 	int vertexShaderGLPtr = 0, fragmentShaderGLPtr = 0;
@@ -247,9 +257,10 @@ int main(int argc, const char * argv[])
 	
 	
 	//glm::mat4 Projection = glm::perspectiveFov(90.0f, (float)pw, (float)ph, 1.0f, 1000.0f);
-	glm::mat4 Projection = glm::ortho(-(pw/2.f), +(pw/2.f), -(ph/2.f), +(ph/2.f));
-	glm::mat4 ViewTranslate = glm::mat4();//glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
-	glm::mat4 View = ViewTranslate;
+	//glm::mat4 Projection = glm::ortho(-(pw/2.f), +(pw/2.f), -(ph/2.f), +(ph/2.f));
+	glm::mat4 Projection = glm::ortho(0.0f, (float)pw, 0.0f, (float)ph);
+	glm::mat4 ViewTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	glm::mat4 View = glm::mat4(1.0f) * ViewTranslate;
 	glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
 	glm::mat4 MVP = Projection * View * Model;
 	
