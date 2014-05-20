@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		3B0FDB4418AFF14800047FB4 /* hiragino.otf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B0FDB4318AFF13C00047FB4 /* hiragino.otf */; };
 		3B14619818BE9E6400AE5E43 /* CShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B14619618BE9E6400AE5E43 /* CShader.cpp */; };
-		3B18F3CC189EDC1B004FD6FB /* test.frag in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B18F3C5189EDBD7004FD6FB /* test.frag */; };
-		3B18F3CD189EDC1B004FD6FB /* test.vert in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B18F3C6189EDBD7004FD6FB /* test.vert */; };
+		3B18F3CC189EDC1B004FD6FB /* text.frag in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B18F3C5189EDBD7004FD6FB /* text.frag */; };
+		3B18F3CD189EDC1B004FD6FB /* text.vert in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B18F3C6189EDBD7004FD6FB /* text.vert */; };
 		3B5B623F188C64580058FC38 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B5B623E188C64580058FC38 /* SDL2.framework */; };
 		3B5B6241188C66280058FC38 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B5B6240188C66280058FC38 /* OpenGL.framework */; };
 		3BE1A82018A19DB8009D18C0 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BE1A81F18A19DB8009D18C0 /* SDL2_ttf.framework */; };
@@ -28,8 +28,8 @@
 			files = (
 				3B0FDB4418AFF14800047FB4 /* hiragino.otf in CopyFiles */,
 				3BE1A82418A1A2E9009D18C0 /* arial.ttf in CopyFiles */,
-				3B18F3CC189EDC1B004FD6FB /* test.frag in CopyFiles */,
-				3B18F3CD189EDC1B004FD6FB /* test.vert in CopyFiles */,
+				3B18F3CC189EDC1B004FD6FB /* text.frag in CopyFiles */,
+				3B18F3CD189EDC1B004FD6FB /* text.vert in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -49,8 +49,8 @@
 		3B0FDB4318AFF13C00047FB4 /* hiragino.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = hiragino.otf; sourceTree = "<group>"; };
 		3B14619618BE9E6400AE5E43 /* CShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CShader.cpp; sourceTree = "<group>"; };
 		3B14619718BE9E6400AE5E43 /* CShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CShader.h; sourceTree = "<group>"; };
-		3B18F3C5189EDBD7004FD6FB /* test.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = test.frag; sourceTree = "<group>"; };
-		3B18F3C6189EDBD7004FD6FB /* test.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = test.vert; sourceTree = "<group>"; };
+		3B18F3C5189EDBD7004FD6FB /* text.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = text.frag; sourceTree = "<group>"; };
+		3B18F3C6189EDBD7004FD6FB /* text.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = text.vert; sourceTree = "<group>"; };
 		3B18F3D5189F0703004FD6FB /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		3B18F3D6189F0703004FD6FB /* common.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = common.hpp; sourceTree = "<group>"; };
 		3B18F3D8189F0703004FD6FB /* _features.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = _features.hpp; sourceTree = "<group>"; };
@@ -330,8 +330,8 @@
 			children = (
 				3B0FDB4318AFF13C00047FB4 /* hiragino.otf */,
 				3BE1A82318A1A2E2009D18C0 /* arial.ttf */,
-				3B18F3C5189EDBD7004FD6FB /* test.frag */,
-				3B18F3C6189EDBD7004FD6FB /* test.vert */,
+				3B18F3C5189EDBD7004FD6FB /* text.frag */,
+				3B18F3C6189EDBD7004FD6FB /* text.vert */,
 			);
 			path = resources;
 			sourceTree = "<group>";

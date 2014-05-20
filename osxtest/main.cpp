@@ -18,6 +18,8 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
+#include "CShader.h"
+
 using namespace std;
 
 int main(int argc, const char * argv[])
@@ -161,14 +163,15 @@ int main(int argc, const char * argv[])
 	vertexShaderGLPtr = glCreateShader(GL_VERTEX_SHADER);
 	shaderGLPtr = glCreateProgram();
 	
-	
-	
+	CShader * textShader = new CShader();
+	textShader->compile("resources/text.vert", "resources/text.frag");
+	printf("%d\n", textShader->getref());
 	char * msgbuffer = new char[1024];
 	int rlength = 0;
 	
 	//fragment shader
 	{
-		std::ifstream file("resources/test.frag", std::ios::binary);
+		std::ifstream file("resources/text.frag", std::ios::binary);
 		if(file.good() == false) {
 			cout << "couldn't open file" << endl;
 			exit(-1);
@@ -200,7 +203,7 @@ int main(int argc, const char * argv[])
 	
 	//vertex shader
 	{
-		std::ifstream file("resources/test.vert", std::ios::binary);
+		std::ifstream file("resources/text.vert", std::ios::binary);
 		if(file.good() == false) {
 			cout << "couldn't open file" << endl;
 			exit(-1);
