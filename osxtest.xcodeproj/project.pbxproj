@@ -11,6 +11,8 @@
 		3B14619818BE9E6400AE5E43 /* CShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B14619618BE9E6400AE5E43 /* CShader.cpp */; };
 		3B18F3CC189EDC1B004FD6FB /* text.frag in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B18F3C5189EDBD7004FD6FB /* text.frag */; };
 		3B18F3CD189EDC1B004FD6FB /* text.vert in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B18F3C6189EDBD7004FD6FB /* text.vert */; };
+		3B33A467193E403100E64754 /* p.frag in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B33A466193E3ECD00E64754 /* p.frag */; };
+		3B33A468193E403100E64754 /* p.vert in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B33A465193E3ECD00E64754 /* p.vert */; };
 		3B5B623F188C64580058FC38 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B5B623E188C64580058FC38 /* SDL2.framework */; };
 		3B5B6241188C66280058FC38 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B5B6240188C66280058FC38 /* OpenGL.framework */; };
 		3BE1A82018A19DB8009D18C0 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BE1A81F18A19DB8009D18C0 /* SDL2_ttf.framework */; };
@@ -26,6 +28,8 @@
 			dstPath = resources;
 			dstSubfolderSpec = 7;
 			files = (
+				3B33A467193E403100E64754 /* p.frag in CopyFiles */,
+				3B33A468193E403100E64754 /* p.vert in CopyFiles */,
 				3B0FDB4418AFF14800047FB4 /* hiragino.otf in CopyFiles */,
 				3BE1A82418A1A2E9009D18C0 /* arial.ttf in CopyFiles */,
 				3B18F3CC189EDC1B004FD6FB /* text.frag in CopyFiles */,
@@ -302,6 +306,8 @@
 		3B18F4D0189F0704004FD6FB /* vec4.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vec4.hpp; sourceTree = "<group>"; };
 		3B18F4D1189F0704004FD6FB /* vector_relational.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vector_relational.hpp; sourceTree = "<group>"; };
 		3B18F4D3189F0704004FD6FB /* xstream.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xstream.hpp; sourceTree = "<group>"; };
+		3B33A465193E3ECD00E64754 /* p.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = p.vert; sourceTree = "<group>"; };
+		3B33A466193E3ECD00E64754 /* p.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = p.frag; sourceTree = "<group>"; };
 		3B5B623E188C64580058FC38 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		3B5B6240188C66280058FC38 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		3BE1A81F18A19DB8009D18C0 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = ../../../../../Library/Frameworks/SDL2_ttf.framework; sourceTree = "<group>"; };
@@ -332,6 +338,8 @@
 				3BE1A82318A1A2E2009D18C0 /* arial.ttf */,
 				3B18F3C5189EDBD7004FD6FB /* text.frag */,
 				3B18F3C6189EDBD7004FD6FB /* text.vert */,
+				3B33A466193E3ECD00E64754 /* p.frag */,
+				3B33A465193E3ECD00E64754 /* p.vert */,
 			);
 			path = resources;
 			sourceTree = "<group>";

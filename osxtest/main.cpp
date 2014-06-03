@@ -157,106 +157,10 @@ int main(int argc, const char * argv[])
 		text_glref = texture;
 	}
 	
-	int shaderGLPtr = 0;
-	int vertexShaderGLPtr = 0, fragmentShaderGLPtr = 0;
-	fragmentShaderGLPtr = glCreateShader(GL_FRAGMENT_SHADER);
-	vertexShaderGLPtr = glCreateShader(GL_VERTEX_SHADER);
-	shaderGLPtr = glCreateProgram();
-	
+
 	CShader * textShader = new CShader();
 	textShader->compile("resources/text.vert", "resources/text.frag");
 	printf("%d\n", textShader->getref());
-	char * msgbuffer = new char[1024];
-	int rlength = 0;
-	
-	//fragment shader
-	{
-		std::ifstream file("resources/text.frag", std::ios::binary);
-		if(file.good() == false) {
-			cout << "couldn't open file" << endl;
-			exit(-1);
-		}
-		file.seekg(0, std::ios::end);
-		std::streamsize size = file.tellg();
-		file.seekg(0, std::ios::beg);
-		
-		vector<char> buffer(size);
-		if (file.read((char *)buffer.data(), size))
-		{
-			cout << "read operation succeeded" << endl;
-		}
-		buffer.push_back('\0');
-		
-		const char *c_str = buffer.data();
-		glShaderSource(fragmentShaderGLPtr, 1, &c_str, NULL);
-		
-		glCompileShader(fragmentShaderGLPtr);
-		
-		int ecode;
-		glGetShaderiv(fragmentShaderGLPtr, GL_COMPILE_STATUS, &ecode);
-		if(ecode == GL_FALSE){
-			cout << "compiling fragment shader error:";
-			glGetShaderInfoLog(fragmentShaderGLPtr, 1024, &rlength, msgbuffer);
-			cout << msgbuffer << endl;
-		}
-	}
-	
-	//vertex shader
-	{
-		std::ifstream file("resources/text.vert", std::ios::binary);
-		if(file.good() == false) {
-			cout << "couldn't open file" << endl;
-			exit(-1);
-		}
-		file.seekg(0, std::ios::end);
-		std::streamsize size = file.tellg();
-		file.seekg(0, std::ios::beg);
-		
-		vector<char> buffer(size);
-		if (file.read((char *)buffer.data(), size))
-		{
-			cout << "read operation succeeded" << endl;
-		}
-		buffer.push_back('\0');
-		
-		const char *c_str = buffer.data();
-		glShaderSource(vertexShaderGLPtr, 1, &c_str, NULL);
-		
-		glCompileShader(vertexShaderGLPtr);
-		
-		int ecode;
-		glGetShaderiv(vertexShaderGLPtr, GL_COMPILE_STATUS, &ecode);
-		if(ecode == GL_FALSE) {
-			cout << "compiling vertex shader error:";
-			glGetShaderInfoLog(vertexShaderGLPtr, 1024, &rlength, msgbuffer);
-			cout << msgbuffer << endl;
-		}
-	}
-	
-	//link both fragment and vertex shader into shaderprogram
-	{
-		glAttachShader(shaderGLPtr, vertexShaderGLPtr);
-		glAttachShader(shaderGLPtr, fragmentShaderGLPtr);
-		
-		int ecode;
-		
-		glLinkProgram(shaderGLPtr);
-		glGetProgramiv(shaderGLPtr, GL_LINK_STATUS, &ecode);
-		if(ecode == GL_FALSE) {
-			cout << "linking shaderprogram error:";
-			glGetProgramInfoLog(shaderGLPtr, 1024, &rlength, msgbuffer);
-			cout << msgbuffer << endl;
-		}
-		
-		glValidateProgram(shaderGLPtr);
-		glGetProgramiv(shaderGLPtr, GL_VALIDATE_STATUS, &ecode);
-		if(ecode == GL_FALSE) {
-			cout << "validating shaderprogram error:";
-			glGetProgramInfoLog(shaderGLPtr, 1024, &rlength, msgbuffer);
-			cout << msgbuffer << endl;
-		}
-	}
-	
 	
 	
 	//glm::mat4 Projection = glm::perspectiveFov(90.0f, (float)pw, (float)ph, 1.0f, 1000.0f);
@@ -267,19 +171,19 @@ int main(int argc, const char * argv[])
 	glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
 	glm::mat4 MVP = Projection * View * Model;
 	
-	int uniform_matrix_mvp = glGetUniformLocation(shaderGLPtr, "umvp");
-	int uniform_deltatime = glGetUniformLocation(shaderGLPtr, "udt");
+	int uniform_matrix_mvp = glGetUniformLocation(textShader->getref(), "umvp");
+	int uniform_deltatime = glGetUniformLocation(textShader->getref(), "udt");
 	
 	/* Create a variable to hold the VBO identifier */
 	GLuint triangleVBO;
 	
-	const unsigned int attrib_vertpos = glGetAttribLocation(shaderGLPtr, "attrib_vertexpos");
-	const unsigned int attrib_texpos = glGetAttribLocation(shaderGLPtr, "attrib_texpos");
+	const unsigned int attrib_vertpos = glGetAttribLocation(textShader->getref(), "attrib_vertexpos");
+	const unsigned int attrib_texpos = glGetAttribLocation(textShader->getref(), "attrib_texpos");
 	
 	//ph, pw, text_height, text_width
 	
 	/* Vertices of two triangles forming a quad (counter-clockwise winding) */
-	float data[] = {
+	float dataText[] = {
 		0.0, 0.0, 0.0,	  0.0, 1.0,
 		(float)text_width, 0.0, 0.0,   1.0, 1.0,
 		0.0, (float)text_height, 0.0,	 0.0, 0.0,
@@ -296,7 +200,7 @@ int main(int argc, const char * argv[])
 	glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
 	
 	/* Upload vertex data to the video device */
-	glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(dataText), dataText, GL_STATIC_DRAW);
 	
 	/* Specify that our coordinate data is going into attribute attrib_vertpos, and contains three floats per vertex */
 	glVertexAttribPointer(attrib_vertpos, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), 0);
@@ -308,6 +212,48 @@ int main(int argc, const char * argv[])
 	
 	/* Make the new VBO active. */
 	glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
+	
+	
+	CShader * pShader = new CShader();
+	pShader->compile("resources/p.vert", "resources/p.frag");
+	printf("%d\n", pShader->getref());
+	
+	glm::mat4 pProjection = glm::perspectiveFov(90.0f, (float)pw, (float)ph, 1.0f, 1000.0f);
+    glm::mat4 pViewTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.0f));
+    glm::mat4 pView = pViewTranslate;
+    glm::mat4 pModel = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+    glm::mat4 pMVP = pProjection * pView * pModel;
+    
+    int puniform_matrix_mvp = glGetUniformLocation(pShader->getref(), "umvp");
+    int puniform_deltatime = glGetUniformLocation(pShader->getref(), "udt");
+    
+    GLuint ptriangleVBO;
+    
+    const unsigned int pshaderAttribute = glGetAttribLocation(pShader->getref(), "attrib_vertexpos");
+    
+    const float NUM_OF_VERTICES_IN_DATA=3;
+    
+    float pdata[3][3] = {
+        {  0.0, 1.0, 0.0   },
+        { -1.0, -1.0, 0.0  },
+        {  1.0, -1.0, 0.0  }
+    };
+    
+    glGenBuffers(1, &ptriangleVBO);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, ptriangleVBO);
+    
+    glBufferData(GL_ARRAY_BUFFER, NUM_OF_VERTICES_IN_DATA * 3 * sizeof(float), pdata, GL_STATIC_DRAW);
+    
+    glVertexAttribPointer(pshaderAttribute, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    
+    glEnableVertexAttribArray(pshaderAttribute);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, ptriangleVBO);
+	
+	
+	
+	
 	
 	SDL_Event e;
 	bool keeprunning = true;
@@ -334,17 +280,31 @@ int main(int argc, const char * argv[])
 				MVP = glm::translate(MVP, glm::vec3(0.0f, 1.0f, 0.0f));
 			}
 		}
+		pModel = glm::rotate(pModel, 0.050f, glm::vec3(0.f, 1.f, 0.f));
+		pModel = glm::rotate(pModel, 0.001f, glm::vec3(1.f, 0.f, 0.f));
+		pModel = glm::rotate(pModel, 0.005f, glm::vec3(0.f, 0.f, 1.f));
+		pMVP = pProjection * pView * pModel;
 		
 		//render loop
 		{
-			glUseProgram(shaderGLPtr);
+			glUseProgram(textShader->getref());
 			glUniformMatrix4fv(uniform_matrix_mvp, 1, GL_FALSE, glm::value_ptr(MVP));
 			glUniform1f(uniform_deltatime, SDL_GetTicks());
 			
 			
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, text_glref);
-			glUniform1i(glGetUniformLocation(shaderGLPtr, "colorMap"), 0);
+			glUniform1i(glGetUniformLocation(textShader->getref(), "colorMap"), 0);
+			glUniform4f(glGetUniformLocation(textShader->getref(), "tint"), 0.65, 0.65, 0.65, 1);
+			
+			glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
+			
+			glVertexAttribPointer(attrib_vertpos, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), 0);
+			glEnableVertexAttribArray(attrib_vertpos);
+			glVertexAttribPointer(attrib_texpos, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
+			
+			glEnableVertexAttribArray(attrib_texpos);
+			
 			
 			glClearColor(0.2,0.2,0.2,1);		  // Draw with OpenGL.
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -354,11 +314,31 @@ int main(int argc, const char * argv[])
 			 */
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 			
+			
+			
+			glUseProgram(pShader->getref());
+            glUniformMatrix4fv(puniform_matrix_mvp, 1, GL_FALSE, glm::value_ptr(pMVP));
+            glUniform1f(puniform_deltatime, SDL_GetTicks());
+			
+			glBindBuffer(GL_ARRAY_BUFFER, ptriangleVBO);
+			glVertexAttribPointer(pshaderAttribute, 3, GL_FLOAT, GL_FALSE, 0, 0);
+			glEnableVertexAttribArray(pshaderAttribute);
+			
+			
+            //glClearColor(1,1,0,1);          // Draw with OpenGL.
+			// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+		
+			
+			
 			SDL_GL_SwapWindow(window);	// Swap the window/buffer to display the result.
 			SDL_Delay(15);				// Pause briefly before moving on to the next cycle.
 			
 		}
 	}
+	
+	
 	
 	
 	// Once finished with OpenGL functions, the SDL_GLContext can be deleted.
@@ -370,3 +350,6 @@ int main(int argc, const char * argv[])
 	return 0;
 }
 
+void debuginfo() {
+	
+}
