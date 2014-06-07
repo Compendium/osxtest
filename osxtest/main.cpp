@@ -19,15 +19,29 @@
 #include "glm/gtc/type_ptr.hpp"
 
 #include "CShader.h"
+#include "CVertexBuffer.h"
 
 using namespace std;
+
+float itof (int i) {
+	return ((float)i/(float)0xff);
+}
 
 int main(int argc, const char * argv[])
 {
 	SDL_Init(SDL_INIT_VIDEO); // Init SDL2
 	
-	// Create a window containing an OpenGL context, also allow HighDPI settings
-	// on devices that support it
+	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+	
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 16);
+	
 	SDL_Window *window = SDL_CreateWindow(
 										  "OpenGL test, よ",
 										  SDL_WINDOWPOS_UNDEFINED,
@@ -41,7 +55,7 @@ int main(int argc, const char * argv[])
 	// Create an OpenGL context associated with the window.
 	SDL_GLContext glcontext = SDL_GL_CreateContext(window);
 	
-	std::printf("\"%s\" with glsl version \"%s\" rendering on \"%s\"\n",
+	std::printf("Starting engines... \"%s\" with glsl version \"%s\" rendering on \"%s\"\n",
 				glGetString(GL_VERSION),
 				glGetString(GL_SHADING_LANGUAGE_VERSION),
 				glGetString(GL_RENDERER));
@@ -73,6 +87,7 @@ int main(int argc, const char * argv[])
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_MULTISAMPLE);
 	
 	
 	// Render some UTF8 text in solid white to a new surface
@@ -160,8 +175,6 @@ int main(int argc, const char * argv[])
 
 	CShader * textShader = new CShader();
 	textShader->compile("resources/text.vert", "resources/text.frag");
-	printf("%d\n", textShader->getref());
-	
 	
 	//glm::mat4 Projection = glm::perspectiveFov(90.0f, (float)pw, (float)ph, 1.0f, 1000.0f);
 	//glm::mat4 Projection = glm::ortho(-(pw/2.f), +(pw/2.f), -(ph/2.f), +(ph/2.f));
@@ -174,49 +187,32 @@ int main(int argc, const char * argv[])
 	int uniform_matrix_mvp = glGetUniformLocation(textShader->getref(), "umvp");
 	int uniform_deltatime = glGetUniformLocation(textShader->getref(), "udt");
 	
-	/* Create a variable to hold the VBO identifier */
-	GLuint triangleVBO;
-	
 	const unsigned int attrib_vertpos = glGetAttribLocation(textShader->getref(), "attrib_vertexpos");
 	const unsigned int attrib_texpos = glGetAttribLocation(textShader->getref(), "attrib_texpos");
 	
-	//ph, pw, text_height, text_width
+	CVertexBuffer * interfaceBuffer = new CVertexBuffer();
 	
-	/* Vertices of two triangles forming a quad (counter-clockwise winding) */
-	float dataText[] = {
-		0.0, 0.0, 0.0,	  0.0, 1.0,
-		(float)text_width, 0.0, 0.0,   1.0, 1.0,
-		0.0, (float)text_height, 0.0,	 0.0, 0.0,
-		
-		(float)text_width, (float)text_height, 0.0,    1.0, 0.0,
-		0.0, (float)text_height, 0.0,	0.0, 0.0,
-		(float)text_width, 0.0, 0.0,	1.0, 1.0,
-	};
+	interfaceBuffer->add(0, 0, 0);
+	interfaceBuffer->add(0, 1);
+	interfaceBuffer->add(text_width, 0, 0);
+	interfaceBuffer->add(1, 1);
+	interfaceBuffer->add(0, text_height, 0);
+	interfaceBuffer->add(0, 0);
 	
-	/* Create a new VBO and use the variable "triangleVBO" to store the VBO id */
-	glGenBuffers(1, &triangleVBO);
+	interfaceBuffer->add(text_width, text_height, 0);
+	interfaceBuffer->add(1, 0);
+	interfaceBuffer->add(0, text_height, 0);
+	interfaceBuffer->add(0, 0);
+	interfaceBuffer->add(text_width, 0, 0);
+	interfaceBuffer->add(1, 1);
 	
-	/* Make the new VBO active */
-	glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
+	interfaceBuffer->upload();
 	
-	/* Upload vertex data to the video device */
-	glBufferData(GL_ARRAY_BUFFER, sizeof(dataText), dataText, GL_STATIC_DRAW);
-	
-	/* Specify that our coordinate data is going into attribute attrib_vertpos, and contains three floats per vertex */
-	glVertexAttribPointer(attrib_vertpos, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), 0);
-	glEnableVertexAttribArray(attrib_vertpos);
-	
-	/* Specify that our texture coordinate data is going into attribute attrib_texpos, and contains three floats per vertex */
-	glVertexAttribPointer(attrib_texpos, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
-	glEnableVertexAttribArray(attrib_texpos);
-	
-	/* Make the new VBO active. */
-	glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
-	
+	interfaceBuffer->addAttribPointer(attrib_vertpos, 3, 5, 0);
+	interfaceBuffer->addAttribPointer(attrib_texpos, 2, 5, 3);
 	
 	CShader * pShader = new CShader();
 	pShader->compile("resources/p.vert", "resources/p.frag");
-	printf("%d\n", pShader->getref());
 	
 	glm::mat4 pProjection = glm::perspectiveFov(90.0f, (float)pw, (float)ph, 1.0f, 1000.0f);
     glm::mat4 pViewTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.0f));
@@ -227,32 +223,14 @@ int main(int argc, const char * argv[])
     int puniform_matrix_mvp = glGetUniformLocation(pShader->getref(), "umvp");
     int puniform_deltatime = glGetUniformLocation(pShader->getref(), "udt");
     
-    GLuint ptriangleVBO;
-    
     const unsigned int pshaderAttribute = glGetAttribLocation(pShader->getref(), "attrib_vertexpos");
     
-    const float NUM_OF_VERTICES_IN_DATA=3;
-    
-    float pdata[3][3] = {
-        {  0.0, 1.0, 0.0   },
-        { -1.0, -1.0, 0.0  },
-        {  1.0, -1.0, 0.0  }
-    };
-    
-    glGenBuffers(1, &ptriangleVBO);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, ptriangleVBO);
-    
-    glBufferData(GL_ARRAY_BUFFER, NUM_OF_VERTICES_IN_DATA * 3 * sizeof(float), pdata, GL_STATIC_DRAW);
-    
-    glVertexAttribPointer(pshaderAttribute, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    
-    glEnableVertexAttribArray(pshaderAttribute);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, ptriangleVBO);
-	
-	
-	
+	CVertexBuffer * vb = new CVertexBuffer();
+	vb->add(0, 1, 0);
+	vb->add(0, 0, 0);
+	vb->add(1, 0, 0);
+	vb->upload();
+	vb->addAttribPointer(pshaderAttribute, 3, 0, 0);
 	
 	
 	SDL_Event e;
@@ -283,10 +261,13 @@ int main(int argc, const char * argv[])
 		pModel = glm::rotate(pModel, 0.050f, glm::vec3(0.f, 1.f, 0.f));
 		pModel = glm::rotate(pModel, 0.001f, glm::vec3(1.f, 0.f, 0.f));
 		pModel = glm::rotate(pModel, 0.005f, glm::vec3(0.f, 0.f, 1.f));
-		pMVP = pProjection * pView * pModel;
+		//pMVP = pProjection * pView * pModel;
 		
 		//render loop
 		{
+			glClearColor(itof(0x40),itof(0x40),itof(0x40),1);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			
 			glUseProgram(textShader->getref());
 			glUniformMatrix4fv(uniform_matrix_mvp, 1, GL_FALSE, glm::value_ptr(MVP));
 			glUniform1f(uniform_deltatime, SDL_GetTicks());
@@ -295,42 +276,21 @@ int main(int argc, const char * argv[])
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, text_glref);
 			glUniform1i(glGetUniformLocation(textShader->getref(), "colorMap"), 0);
-			glUniform4f(glGetUniformLocation(textShader->getref(), "tint"), 0.65, 0.65, 0.65, 1);
+			glUniform4f(glGetUniformLocation(textShader->getref(), "tint"), itof(0xF2), itof(0xEF), itof(0xDC), 1);
 			
-			glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
-			
-			glVertexAttribPointer(attrib_vertpos, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), 0);
-			glEnableVertexAttribArray(attrib_vertpos);
-			glVertexAttribPointer(attrib_texpos, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
-			
-			glEnableVertexAttribArray(attrib_texpos);
-			
-			
-			glClearColor(0.2,0.2,0.2,1);		  // Draw with OpenGL.
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			
-			/* Actually draw the triangle, givingthe number of vertices provided by invoke glDrawArrays
-			 while telling that our data is a triangle and we want to draw 0-3 vertices
-			 */
+			interfaceBuffer->enable();
 			glDrawArrays(GL_TRIANGLES, 0, 6);
-			
+			interfaceBuffer->disable();
 			
 			
 			glUseProgram(pShader->getref());
             glUniformMatrix4fv(puniform_matrix_mvp, 1, GL_FALSE, glm::value_ptr(pMVP));
             glUniform1f(puniform_deltatime, SDL_GetTicks());
 			
-			glBindBuffer(GL_ARRAY_BUFFER, ptriangleVBO);
-			glVertexAttribPointer(pshaderAttribute, 3, GL_FLOAT, GL_FALSE, 0, 0);
-			glEnableVertexAttribArray(pshaderAttribute);
-			
-			
-            //glClearColor(1,1,0,1);          // Draw with OpenGL.
-			// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+			vb->enable();
             glDrawArrays(GL_TRIANGLES, 0, 3);
-		
-			
+			vb->disable();
+
 			
 			SDL_GL_SwapWindow(window);	// Swap the window/buffer to display the result.
 			SDL_Delay(15);				// Pause briefly before moving on to the next cycle.

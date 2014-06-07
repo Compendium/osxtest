@@ -11,6 +11,7 @@
 		3B14619818BE9E6400AE5E43 /* CShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B14619618BE9E6400AE5E43 /* CShader.cpp */; };
 		3B18F3CC189EDC1B004FD6FB /* text.frag in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B18F3C5189EDBD7004FD6FB /* text.frag */; };
 		3B18F3CD189EDC1B004FD6FB /* text.vert in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B18F3C6189EDBD7004FD6FB /* text.vert */; };
+		3B1EE62B1940EB2500503B9F /* CVertexBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B1EE6291940EB2500503B9F /* CVertexBuffer.cpp */; };
 		3B33A467193E403100E64754 /* p.frag in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B33A466193E3ECD00E64754 /* p.frag */; };
 		3B33A468193E403100E64754 /* p.vert in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B33A465193E3ECD00E64754 /* p.vert */; };
 		3B5B623F188C64580058FC38 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B5B623E188C64580058FC38 /* SDL2.framework */; };
@@ -18,7 +19,6 @@
 		3BE1A82018A19DB8009D18C0 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BE1A81F18A19DB8009D18C0 /* SDL2_ttf.framework */; };
 		3BE1A82418A1A2E9009D18C0 /* arial.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3BE1A82318A1A2E2009D18C0 /* arial.ttf */; };
 		3BFEEBC6188880E200AA90C9 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3BFEEBC5188880E200AA90C9 /* main.cpp */; };
-		3BFEEBC8188880E200AA90C9 /* osxtest.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3BFEEBC7188880E200AA90C9 /* osxtest.1 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -43,7 +43,6 @@
 			dstPath = /usr/share/man/man1;
 			dstSubfolderSpec = 0;
 			files = (
-				3BFEEBC8188880E200AA90C9 /* osxtest.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -306,6 +305,8 @@
 		3B18F4D0189F0704004FD6FB /* vec4.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vec4.hpp; sourceTree = "<group>"; };
 		3B18F4D1189F0704004FD6FB /* vector_relational.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vector_relational.hpp; sourceTree = "<group>"; };
 		3B18F4D3189F0704004FD6FB /* xstream.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xstream.hpp; sourceTree = "<group>"; };
+		3B1EE6291940EB2500503B9F /* CVertexBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CVertexBuffer.cpp; sourceTree = "<group>"; };
+		3B1EE62A1940EB2500503B9F /* CVertexBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVertexBuffer.h; sourceTree = "<group>"; };
 		3B33A465193E3ECD00E64754 /* p.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = p.vert; sourceTree = "<group>"; };
 		3B33A466193E3ECD00E64754 /* p.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = p.frag; sourceTree = "<group>"; };
 		3B5B623E188C64580058FC38 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
@@ -314,7 +315,6 @@
 		3BE1A82318A1A2E2009D18C0 /* arial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = arial.ttf; sourceTree = "<group>"; };
 		3BFEEBC2188880E200AA90C9 /* osxtest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = osxtest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BFEEBC5188880E200AA90C9 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		3BFEEBC7188880E200AA90C9 /* osxtest.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = osxtest.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -660,7 +660,8 @@
 			children = (
 				3B18F3C4189EDBD7004FD6FB /* resources */,
 				3BFEEBC5188880E200AA90C9 /* main.cpp */,
-				3BFEEBC7188880E200AA90C9 /* osxtest.1 */,
+				3B1EE6291940EB2500503B9F /* CVertexBuffer.cpp */,
+				3B1EE62A1940EB2500503B9F /* CVertexBuffer.h */,
 				3B14619618BE9E6400AE5E43 /* CShader.cpp */,
 				3B14619718BE9E6400AE5E43 /* CShader.h */,
 			);
@@ -720,6 +721,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B14619818BE9E6400AE5E43 /* CShader.cpp in Sources */,
+				3B1EE62B1940EB2500503B9F /* CVertexBuffer.cpp in Sources */,
 				3BFEEBC6188880E200AA90C9 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
