@@ -12,6 +12,7 @@
 		3B18F3CC189EDC1B004FD6FB /* text.frag in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B18F3C5189EDBD7004FD6FB /* text.frag */; };
 		3B18F3CD189EDC1B004FD6FB /* text.vert in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B18F3C6189EDBD7004FD6FB /* text.vert */; };
 		3B1EE62B1940EB2500503B9F /* CVertexBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B1EE6291940EB2500503B9F /* CVertexBuffer.cpp */; };
+		3B25B46D1944A3D400E3E4A5 /* CTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B25B46B1944A3D400E3E4A5 /* CTexture.cpp */; };
 		3B33A467193E403100E64754 /* p.frag in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B33A466193E3ECD00E64754 /* p.frag */; };
 		3B33A468193E403100E64754 /* p.vert in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B33A465193E3ECD00E64754 /* p.vert */; };
 		3B5B623F188C64580058FC38 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B5B623E188C64580058FC38 /* SDL2.framework */; };
@@ -307,6 +308,8 @@
 		3B18F4D3189F0704004FD6FB /* xstream.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = xstream.hpp; sourceTree = "<group>"; };
 		3B1EE6291940EB2500503B9F /* CVertexBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CVertexBuffer.cpp; sourceTree = "<group>"; };
 		3B1EE62A1940EB2500503B9F /* CVertexBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVertexBuffer.h; sourceTree = "<group>"; };
+		3B25B46B1944A3D400E3E4A5 /* CTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CTexture.cpp; sourceTree = "<group>"; };
+		3B25B46C1944A3D400E3E4A5 /* CTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTexture.h; sourceTree = "<group>"; };
 		3B33A465193E3ECD00E64754 /* p.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = p.vert; sourceTree = "<group>"; };
 		3B33A466193E3ECD00E64754 /* p.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = p.frag; sourceTree = "<group>"; };
 		3B5B623E188C64580058FC38 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
@@ -664,6 +667,8 @@
 				3B1EE62A1940EB2500503B9F /* CVertexBuffer.h */,
 				3B14619618BE9E6400AE5E43 /* CShader.cpp */,
 				3B14619718BE9E6400AE5E43 /* CShader.h */,
+				3B25B46B1944A3D400E3E4A5 /* CTexture.cpp */,
+				3B25B46C1944A3D400E3E4A5 /* CTexture.h */,
 			);
 			path = osxtest;
 			sourceTree = "<group>";
@@ -721,6 +726,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B14619818BE9E6400AE5E43 /* CShader.cpp in Sources */,
+				3B25B46D1944A3D400E3E4A5 /* CTexture.cpp in Sources */,
 				3B1EE62B1940EB2500503B9F /* CVertexBuffer.cpp in Sources */,
 				3BFEEBC6188880E200AA90C9 /* main.cpp in Sources */,
 			);

@@ -24,13 +24,16 @@ private:
 	std::vector<SVertexAttrib> vertex_attribs;
 	std::vector<float> fv;
 	unsigned int buffer_id;
+	bool replacemode;
+	int replaceoffset, replacecount;
 public:
 	CVertexBuffer();
-	void add (float* fp);
+	void add (std::vector<float> fp);
 	void add (float f);
 	void add (float f1, float f2);
 	void add (float f1, float f2, float f3);
 	void upload();
+	void replace(int offset);
 	void addAttribPointer(int ap_gl_id, int size, int stride, int offset);
 	
 	void enable ();

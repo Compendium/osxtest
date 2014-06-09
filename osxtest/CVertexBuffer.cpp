@@ -5,39 +5,67 @@
 //  Created by Alexander on 05/06/14.
 //  Copyright (c) 2014 Alexander. All rights reserved.
 //
+//TODO add safety guards, prevent array overflows
 
 #include "CVertexBuffer.h"
 
 CVertexBuffer::CVertexBuffer () {
 	glGenBuffers(1, &buffer_id);
+	replacemode = false;
+	replaceoffset = replacecount = 0;
 }
 
-void CVertexBuffer::add (float* fp) {
+void CVertexBuffer::add (std::vector<float> fp) {
 	
 }
 
 void CVertexBuffer::add (float f) {
-	fv.push_back(f);
+	if(replacemode) {
+		fv[replaceoffset + replacecount++] = f;
+	} else {
+		fv.push_back(f);
+	}
 }
 
 void CVertexBuffer::add(float f1, float f2) {
-	fv.push_back(f1);
-	fv.push_back(f2);
+	if(replacemode) {
+		fv[replaceoffset + replacecount++] = f1;
+		fv[replaceoffset + replacecount++] = f2;
+	} else {
+		fv.push_back(f1);
+		fv.push_back(f2);
+	}
 }
 
 void CVertexBuffer::add(float f1, float f2, float f3) {
-	fv.push_back(f1);
-	fv.push_back(f2);
-	fv.push_back(f3);
+	if(replacemode) {
+		fv[replaceoffset + replacecount++] = f1;
+		fv[replaceoffset + replacecount++] = f2;
+		fv[replaceoffset + replacecount++] = f3;
+	} else {
+		fv.push_back(f1);
+		fv.push_back(f2);
+		fv.push_back(f3);
+	}
 }
 
 void CVertexBuffer::upload() {
 	glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
-	
-	//TODO make the usage a parameter?
-	glBufferData(GL_ARRAY_BUFFER, fv.size() * sizeof(float), &fv[0], GL_STATIC_DRAW);
-	
+	if(replacemode) {
+		glBufferSubData(GL_ARRAY_BUFFER, replaceoffset * sizeof(float), replacecount * sizeof(float), &fv[replaceoffset]);
+		replacemode = false;
+		replaceoffset = replacecount = 0;
+	} else {
+			
+		//TODO make the usage a parameter?
+		glBufferData(GL_ARRAY_BUFFER, fv.size() * sizeof(float), &fv[0], GL_STATIC_DRAW);
+	}
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void CVertexBuffer::replace(int offset) {
+	replacemode = true;
+	replaceoffset = offset;
 }
 
 void CVertexBuffer::addAttribPointer(int ap_gl_id, int size, int stride, int offset){
@@ -65,37 +93,3 @@ void CVertexBuffer::disable (){
 	}
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
-
-/*
- glGenBuffers(1, &ptriangleVBO);
- 
- glBindBuffer(GL_ARRAY_BUFFER, ptriangleVBO);
- 
- glBufferData(GL_ARRAY_BUFFER, NUM_OF_VERTICES_IN_DATA * 3 * sizeof(float), pdata, GL_STATIC_DRAW);
- 
- glVertexAttribPointer(pshaderAttribute, 3, GL_FLOAT, GL_FALSE, 0, 0);
- 
- glEnableVertexAttribArray(pshaderAttribute);
- 
- glBindBuffer(GL_ARRAY_BUFFER, 0);
- 
- 
- *****
- 
- 
- glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
- glEnableVertexAttribArray(attrib_vertpos);
- glEnableVertexAttribArray(attrib_texpos);
- glVertexAttribPointer(attrib_vertpos, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), 0);
- glVertexAttribPointer(attrib_texpos, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
- 
- 
- glClearColor(itof(0x40),itof(0x40),itof(0x40),1);		  // Draw with OpenGL.
- glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
- 
- glDrawArrays(GL_TRIANGLES, 0, 6);
- 
- glDisableVertexAttribArray(attrib_vertpos);
- glDisableVertexAttribArray(attrib_texpos);
-
-*/

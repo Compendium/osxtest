@@ -7,7 +7,5 @@ uniform sampler2D colorMap;
 
 void main()
 {
-    //gl_FragColor = vec4(1.0);//gl_Color;
-    //if(texture2D(colorMap, frag_texpos).a == 0) discard;
-    gl_FragColor = frag_tint * texture2D(colorMap, frag_texpos);
+    gl_FragColor = frag_tint * texture2D(colorMap, frag_texpos) + vec4(0.1);
 }

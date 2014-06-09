@@ -9,6 +9,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <ctime>
 
 #include <SDL2/SDL.h>
 #include <SDL2_ttf/SDL_ttf.h>
@@ -20,6 +21,7 @@
 
 #include "CShader.h"
 #include "CVertexBuffer.h"
+#include "CTexture.h"
 
 using namespace std;
 
@@ -75,7 +77,7 @@ int main(int argc, const char * argv[])
 	}
 	
 	TTF_Font *font;
-	int font_height = ph*0.1; //size in pixels, make text appear the same size
+	int font_height = ph*0.02; //size in pixels, make text appear the same size
 	//on all resolutions
 	std::printf("font_height: %i\n", font_height);
 	font=TTF_OpenFont("resources/hiragino.otf", font_height);
@@ -88,6 +90,7 @@ int main(int argc, const char * argv[])
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_MULTISAMPLE);
+	glEnable(GL_CULL_FACE);
 	
 	
 	// Render some UTF8 text in solid white to a new surface
@@ -95,81 +98,32 @@ int main(int argc, const char * argv[])
 	// then free the text surface
 	SDL_Color color={255,255,255};
 	SDL_Surface *surface;
-	int text_width = 0, text_height = 0;
-	unsigned int text_glref;
-	string text = "世界こんにちは！";
+
+	string text = "こんにちは！";
 	string renderer =
 		string(reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
 	
-	text += "\n(rendering on:\n";
+	text += " (rendering on:";
 	text += renderer;
 	text += ")";
 	text += "font size: ";
 	text += std::to_string(font_height);
 	text += "px";
 	
-	surface=TTF_RenderUTF8_Blended_Wrapped(font, text.c_str(), color, pw*2);
+	int mw, mh;
+	//int TTF_SizeUTF8(TTF_Font *font, const char *text, int *w, int *h)
+	TTF_SizeUTF8(font, text.c_str(), &mw, &mh);
+	printf("calculated size w x h = %i x %i \n", mw, mh);
+	surface=TTF_RenderUTF8_Blended_Wrapped(font, text.c_str(), color, pw);
+	
+	CTexture * texttex = new CTexture();
 	
 	if(!surface) {
 		std::printf("TTF_RenderUTF8_Blended_Wrapped error; %s\n",
 					TTF_GetError());
 	} else {
-		GLuint texture;			// This is a handle to our texture object
-		GLenum texture_format = -1;
-		GLint  nOfColors;
-		
-		// Check that the image's width is a power of 2
-		if ( (surface->w & (surface->w - 1)) != 0 ) {
-			printf("warning: image width is not a power of 2\n");
-		}
-		
-		// Also check if the height is a power of 2
-		if ( (surface->h & (surface->h - 1)) != 0 ) {
-			printf("warning: image height is not a power of 2\n");
-		}
-		
-		text_height = surface->h;
-		text_width = surface->w;
-		
-		// get the number of channels in the SDL surface
-		nOfColors = surface->format->BytesPerPixel;
-		if (nOfColors == 4)		// contains an alpha channel
-		{
-			if (surface->format->Rmask == 0x000000ff)
-				texture_format = GL_RGBA;
-			else
-				texture_format = GL_BGRA;
-		} else if (nOfColors == 3)	   // no alpha channel
-		{
-			if (surface->format->Rmask == 0x000000ff)
-				texture_format = GL_RGB;
-			else
-				texture_format = GL_BGR;
-		} else {
-			printf("warning: the image is not truecolor..\
-				   this will probably break\n");
-			// this error should not go unhandled
-		}
-		
-		// Have OpenGL generate a texture object handle for us
-		glGenTextures( 1, &texture );
-		
-		// Bind the texture object
-		glBindTexture( GL_TEXTURE_2D, texture );
-		
-		// Set the texture's stretching properties
-		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-		
-		// Edit the texture object's image data using the information SDL_Surface gives us
-		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, surface->w, surface->h, 0,
-					 texture_format, GL_UNSIGNED_BYTE, surface->pixels );
-		
-		// Free the SDL_Surface only if it was successfully created
-		if ( surface ) {
-			SDL_FreeSurface( surface );
-		}
-		text_glref = texture;
+		texttex->set(surface);
+		SDL_FreeSurface(surface);
 	}
 	
 
@@ -181,7 +135,7 @@ int main(int argc, const char * argv[])
 	glm::mat4 Projection = glm::ortho(0.0f, (float)pw, 0.0f, (float)ph);
 	glm::mat4 ViewTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	glm::mat4 View = glm::mat4(1.0f) * ViewTranslate;
-	glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+	glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
 	glm::mat4 MVP = Projection * View * Model;
 	
 	int uniform_matrix_mvp = glGetUniformLocation(textShader->getref(), "umvp");
@@ -194,16 +148,16 @@ int main(int argc, const char * argv[])
 	
 	interfaceBuffer->add(0, 0, 0);
 	interfaceBuffer->add(0, 1);
-	interfaceBuffer->add(text_width, 0, 0);
+	interfaceBuffer->add(texttex->getWidth(), 0, 0);
 	interfaceBuffer->add(1, 1);
-	interfaceBuffer->add(0, text_height, 0);
+	interfaceBuffer->add(0, texttex->getHeight(), 0);
 	interfaceBuffer->add(0, 0);
 	
-	interfaceBuffer->add(text_width, text_height, 0);
+	interfaceBuffer->add(texttex->getWidth(), texttex->getHeight(), 0);
 	interfaceBuffer->add(1, 0);
-	interfaceBuffer->add(0, text_height, 0);
+	interfaceBuffer->add(0, texttex->getHeight(), 0);
 	interfaceBuffer->add(0, 0);
-	interfaceBuffer->add(text_width, 0, 0);
+	interfaceBuffer->add(texttex->getWidth(), 0, 0);
 	interfaceBuffer->add(1, 1);
 	
 	interfaceBuffer->upload();
@@ -223,20 +177,104 @@ int main(int argc, const char * argv[])
     int puniform_matrix_mvp = glGetUniformLocation(pShader->getref(), "umvp");
     int puniform_deltatime = glGetUniformLocation(pShader->getref(), "udt");
     
-    const unsigned int pshaderAttribute = glGetAttribLocation(pShader->getref(), "attrib_vertexpos");
+    const unsigned int pshaderAttributeVertPos = glGetAttribLocation(pShader->getref(), "attrib_vertexpos");
+	const unsigned int pshaderAttributeVertCol = glGetAttribLocation(pShader->getref(), "attrib_vertexcolor");
     
 	CVertexBuffer * vb = new CVertexBuffer();
-	vb->add(0, 1, 0);
-	vb->add(0, 0, 0);
-	vb->add(1, 0, 0);
-	vb->upload();
-	vb->addAttribPointer(pshaderAttribute, 3, 0, 0);
+	vb->add(1, 0, 0); vb->add(1, 0, 0);
+	vb->add(0, 0, 0); vb->add(1, 0, 0);
+	vb->add(0, 1, 0); vb->add(1, 0, 0);
 	
+	vb->add(0, 1, 0); vb->add(1, 0, 0);
+	vb->add(1, 1, 0); vb->add(1, 0, 0);
+	vb->add(1, 0, 0); vb->add(1, 0, 0);
+	//----
+	vb->add(1, 0, 1); vb->add(0, 1, 0);
+	vb->add(0, 1, 1); vb->add(0, 1, 0);
+	vb->add(0, 0, 1); vb->add(0, 1, 0);
+	
+	vb->add(1, 0, 1); vb->add(0, 1, 0);
+	vb->add(1, 1, 1); vb->add(0, 1, 0);
+	vb->add(0, 1, 1); vb->add(0, 1, 0);
+	//----
+	vb->add(1, 0, 1); vb->add(1, 1, 0);
+	vb->add(1, 0, 0); vb->add(1, 1, 0);
+	vb->add(1, 1, 0); vb->add(1, 1, 0);
+	
+	vb->add(1, 1, 0); vb->add(1, 1, 0);
+	vb->add(1, 1, 1); vb->add(1, 1, 0);
+	vb->add(1, 0, 1); vb->add(1, 1, 0);
+	//----
+	vb->add(0, 1, 0); vb->add(0, 1, 1);
+	vb->add(0, 0, 0); vb->add(0, 1, 1);
+	vb->add(0, 0, 1); vb->add(0, 1, 1);
+	
+	vb->add(0, 0, 1); vb->add(0, 1, 1);
+	vb->add(0, 1, 1); vb->add(0, 1, 1);
+	vb->add(0, 1, 0); vb->add(0, 1, 1);
+	
+	vb->upload();
+	vb->addAttribPointer(pshaderAttributeVertPos, 3, 6, 0);
+	vb->addAttribPointer(pshaderAttributeVertCol, 3, 6, 3);
 	
 	SDL_Event e;
 	bool keeprunning = true;
+	int framecount = 0;
+
+	clock_t t = clock();
+	float timediff;
 	
 	while (keeprunning) {
+		t = clock();
+		
+		// Render some UTF8 text in solid white to a new surface
+		// then blit to the upper left of the screen
+		// then free the text surface
+		SDL_Color color={255,255,255};
+		SDL_Surface *surface;
+		
+		string text = "こんにちは！";
+		string renderer =
+		string(reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+		
+		text += " (rendering on:";
+		text += renderer;
+		text += ")";
+		text += "font size: ";
+		text += std::to_string(font_height);
+		text += "px ";
+		text += "ft: ";
+		text += std::to_string(timediff);
+		text += " fc: ";
+		text += std::to_string(framecount);
+		
+		//int TTF_SizeUTF8(TTF_Font *font, const char *text, int *w, int *h)
+		surface=TTF_RenderUTF8_Blended_Wrapped(font, text.c_str(), color, pw);
+
+		if(!surface) {
+			std::printf("TTF_RenderUTF8_Blended_Wrapped error; %s\n",
+						TTF_GetError());
+		} else {
+			texttex->set(surface);
+			SDL_FreeSurface(surface);
+		}
+		
+		interfaceBuffer->replace(0);
+		interfaceBuffer->add(0, 0, 0);
+		interfaceBuffer->add(0, 1);
+		interfaceBuffer->add(texttex->getWidth(), 0, 0);
+		interfaceBuffer->add(1, 1);
+		interfaceBuffer->add(0, texttex->getHeight(), 0);
+		interfaceBuffer->add(0, 0);
+		interfaceBuffer->add(texttex->getWidth(), texttex->getHeight(), 0);
+		interfaceBuffer->add(1, 0);
+		interfaceBuffer->add(0, texttex->getHeight(), 0);
+		interfaceBuffer->add(0, 0);
+		interfaceBuffer->add(texttex->getWidth(), 0, 0);
+		interfaceBuffer->add(1, 1);
+		interfaceBuffer->upload();
+		
+		
 		//update loop -- first work all the events
 		while (SDL_PollEvent(&e) != 0) {
 			if(e.type == SDL_KEYDOWN || e.type == SDL_QUIT)
@@ -259,9 +297,9 @@ int main(int argc, const char * argv[])
 			}
 		}
 		pModel = glm::rotate(pModel, 0.050f, glm::vec3(0.f, 1.f, 0.f));
-		pModel = glm::rotate(pModel, 0.001f, glm::vec3(1.f, 0.f, 0.f));
+		pModel = glm::rotate(pModel, 0.05f, glm::vec3(1.f, 0.f, 0.f));
 		pModel = glm::rotate(pModel, 0.005f, glm::vec3(0.f, 0.f, 1.f));
-		//pMVP = pProjection * pView * pModel;
+		pMVP = pProjection * pView * pModel;
 		
 		//render loop
 		{
@@ -272,9 +310,8 @@ int main(int argc, const char * argv[])
 			glUniformMatrix4fv(uniform_matrix_mvp, 1, GL_FALSE, glm::value_ptr(MVP));
 			glUniform1f(uniform_deltatime, SDL_GetTicks());
 			
-			
 			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, text_glref);
+			glBindTexture(GL_TEXTURE_2D, texttex->getref());
 			glUniform1i(glGetUniformLocation(textShader->getref(), "colorMap"), 0);
 			glUniform4f(glGetUniformLocation(textShader->getref(), "tint"), itof(0xF2), itof(0xEF), itof(0xDC), 1);
 			
@@ -288,18 +325,19 @@ int main(int argc, const char * argv[])
             glUniform1f(puniform_deltatime, SDL_GetTicks());
 			
 			vb->enable();
-            glDrawArrays(GL_TRIANGLES, 0, 3);
+            glDrawArrays(GL_TRIANGLES, 0, 24);
 			vb->disable();
 
 			
-			SDL_GL_SwapWindow(window);	// Swap the window/buffer to display the result.
-			SDL_Delay(15);				// Pause briefly before moving on to the next cycle.
-			
+			SDL_GL_SwapWindow(window);
+			SDL_Delay(15);
 		}
+		
+		clock_t now = clock();
+		float tickdiff = ((float)(now - t));
+		timediff = tickdiff /CLOCKS_PER_SEC*1000.0f;
+		framecount++;
 	}
-	
-	
-	
 	
 	// Once finished with OpenGL functions, the SDL_GLContext can be deleted.
 	SDL_GL_DeleteContext(glcontext);
@@ -308,8 +346,4 @@ int main(int argc, const char * argv[])
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 	return 0;
-}
-
-void debuginfo() {
-	
 }

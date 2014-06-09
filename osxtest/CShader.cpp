@@ -10,9 +10,9 @@
 
 
 CShader::CShader() {
-	printf("[-1] Creating new shader object\n");
 	fragment_ref = vertex_ref = program_ref = -1;
 	init();
+	printf("[%i] Created new shader object\n", program_ref);
 }
 
 CShader::~CShader() {
