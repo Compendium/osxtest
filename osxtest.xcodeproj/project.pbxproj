@@ -13,10 +13,19 @@
 		3B18F3CD189EDC1B004FD6FB /* text.vert in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B18F3C6189EDBD7004FD6FB /* text.vert */; };
 		3B1EE62B1940EB2500503B9F /* CVertexBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B1EE6291940EB2500503B9F /* CVertexBuffer.cpp */; };
 		3B25B46D1944A3D400E3E4A5 /* CTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B25B46B1944A3D400E3E4A5 /* CTexture.cpp */; };
+		3B2DCA2419ABDE4C00F933AF /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B2DCA2319ABDE4C00F933AF /* SDL2_image.framework */; };
+		3B2DCA2619ABDF2200F933AF /* boxtest.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B2DCA2519ABDF0700F933AF /* boxtest.png */; };
+		3B337B82199C165300FCBE99 /* CTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B337B80199C165300FCBE99 /* CTypes.cpp */; };
 		3B33A467193E403100E64754 /* p.frag in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B33A466193E3ECD00E64754 /* p.frag */; };
 		3B33A468193E403100E64754 /* p.vert in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B33A465193E3ECD00E64754 /* p.vert */; };
+		3B48A08519A8DCAD00264071 /* CVertexBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B48A08319A8DCAD00264071 /* CVertexBatch.cpp */; };
+		3B48A08B19AA5FCB00264071 /* basic_color_shader.frag in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B48A08719AA5E6600264071 /* basic_color_shader.frag */; };
+		3B48A08C19AA5FCB00264071 /* basic_color_shader.vert in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B48A08819AA5E6600264071 /* basic_color_shader.vert */; };
+		3B48A08D19AA5FCB00264071 /* basic_texture_shader.frag in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B48A08919AA5E6600264071 /* basic_texture_shader.frag */; };
+		3B48A08E19AA5FCB00264071 /* basic_texture_shader.vert in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B48A08A19AA5E6600264071 /* basic_texture_shader.vert */; };
 		3B5B623F188C64580058FC38 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B5B623E188C64580058FC38 /* SDL2.framework */; };
 		3B5B6241188C66280058FC38 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B5B6240188C66280058FC38 /* OpenGL.framework */; };
+		3BA1079F1945D68F006B2AC4 /* CPrimitives.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3BA1079D1945D68F006B2AC4 /* CPrimitives.cpp */; };
 		3BE1A82018A19DB8009D18C0 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BE1A81F18A19DB8009D18C0 /* SDL2_ttf.framework */; };
 		3BE1A82418A1A2E9009D18C0 /* arial.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3BE1A82318A1A2E2009D18C0 /* arial.ttf */; };
 		3BFEEBC6188880E200AA90C9 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3BFEEBC5188880E200AA90C9 /* main.cpp */; };
@@ -29,6 +38,11 @@
 			dstPath = resources;
 			dstSubfolderSpec = 7;
 			files = (
+				3B2DCA2619ABDF2200F933AF /* boxtest.png in CopyFiles */,
+				3B48A08B19AA5FCB00264071 /* basic_color_shader.frag in CopyFiles */,
+				3B48A08C19AA5FCB00264071 /* basic_color_shader.vert in CopyFiles */,
+				3B48A08D19AA5FCB00264071 /* basic_texture_shader.frag in CopyFiles */,
+				3B48A08E19AA5FCB00264071 /* basic_texture_shader.vert in CopyFiles */,
 				3B33A467193E403100E64754 /* p.frag in CopyFiles */,
 				3B33A468193E403100E64754 /* p.vert in CopyFiles */,
 				3B0FDB4418AFF14800047FB4 /* hiragino.otf in CopyFiles */,
@@ -310,10 +324,23 @@
 		3B1EE62A1940EB2500503B9F /* CVertexBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVertexBuffer.h; sourceTree = "<group>"; };
 		3B25B46B1944A3D400E3E4A5 /* CTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CTexture.cpp; sourceTree = "<group>"; };
 		3B25B46C1944A3D400E3E4A5 /* CTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTexture.h; sourceTree = "<group>"; };
+		3B2DCA2319ABDE4C00F933AF /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = ../../../../../Library/Frameworks/SDL2_image.framework; sourceTree = "<group>"; };
+		3B2DCA2519ABDF0700F933AF /* boxtest.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = boxtest.png; sourceTree = "<group>"; };
+		3B337B80199C165300FCBE99 /* CTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CTypes.cpp; sourceTree = "<group>"; };
+		3B337B81199C165300FCBE99 /* CTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTypes.h; sourceTree = "<group>"; };
 		3B33A465193E3ECD00E64754 /* p.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = p.vert; sourceTree = "<group>"; };
 		3B33A466193E3ECD00E64754 /* p.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = p.frag; sourceTree = "<group>"; };
+		3B48A08319A8DCAD00264071 /* CVertexBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CVertexBatch.cpp; sourceTree = "<group>"; };
+		3B48A08419A8DCAD00264071 /* CVertexBatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVertexBatch.h; sourceTree = "<group>"; };
+		3B48A08619A8DD4D00264071 /* Notes */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Notes; sourceTree = "<group>"; };
+		3B48A08719AA5E6600264071 /* basic_color_shader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic_color_shader.frag; sourceTree = "<group>"; };
+		3B48A08819AA5E6600264071 /* basic_color_shader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic_color_shader.vert; sourceTree = "<group>"; };
+		3B48A08919AA5E6600264071 /* basic_texture_shader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic_texture_shader.frag; sourceTree = "<group>"; };
+		3B48A08A19AA5E6600264071 /* basic_texture_shader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = basic_texture_shader.vert; sourceTree = "<group>"; };
 		3B5B623E188C64580058FC38 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		3B5B6240188C66280058FC38 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		3BA1079D1945D68F006B2AC4 /* CPrimitives.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CPrimitives.cpp; path = ../CPrimitives.cpp; sourceTree = "<group>"; };
+		3BA1079E1945D68F006B2AC4 /* CPrimitives.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CPrimitives.h; path = ../CPrimitives.h; sourceTree = "<group>"; };
 		3BE1A81F18A19DB8009D18C0 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = ../../../../../Library/Frameworks/SDL2_ttf.framework; sourceTree = "<group>"; };
 		3BE1A82318A1A2E2009D18C0 /* arial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = arial.ttf; sourceTree = "<group>"; };
 		3BFEEBC2188880E200AA90C9 /* osxtest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = osxtest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -325,9 +352,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3BE1A82018A19DB8009D18C0 /* SDL2_ttf.framework in Frameworks */,
-				3B5B6241188C66280058FC38 /* OpenGL.framework in Frameworks */,
 				3B5B623F188C64580058FC38 /* SDL2.framework in Frameworks */,
+				3BE1A82018A19DB8009D18C0 /* SDL2_ttf.framework in Frameworks */,
+				3B2DCA2419ABDE4C00F933AF /* SDL2_image.framework in Frameworks */,
+				3B5B6241188C66280058FC38 /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -337,6 +365,11 @@
 		3B18F3C4189EDBD7004FD6FB /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				3B2DCA2519ABDF0700F933AF /* boxtest.png */,
+				3B48A08719AA5E6600264071 /* basic_color_shader.frag */,
+				3B48A08819AA5E6600264071 /* basic_color_shader.vert */,
+				3B48A08919AA5E6600264071 /* basic_texture_shader.frag */,
+				3B48A08A19AA5E6600264071 /* basic_texture_shader.vert */,
 				3B0FDB4318AFF13C00047FB4 /* hiragino.otf */,
 				3BE1A82318A1A2E2009D18C0 /* arial.ttf */,
 				3B18F3C5189EDBD7004FD6FB /* text.frag */,
@@ -641,6 +674,7 @@
 		3BFEEBB9188880E100AA90C9 = {
 			isa = PBXGroup;
 			children = (
+				3B2DCA2319ABDE4C00F933AF /* SDL2_image.framework */,
 				3B5B6240188C66280058FC38 /* OpenGL.framework */,
 				3B5B623E188C64580058FC38 /* SDL2.framework */,
 				3BE1A81F18A19DB8009D18C0 /* SDL2_ttf.framework */,
@@ -663,12 +697,19 @@
 			children = (
 				3B18F3C4189EDBD7004FD6FB /* resources */,
 				3BFEEBC5188880E200AA90C9 /* main.cpp */,
+				3B48A08319A8DCAD00264071 /* CVertexBatch.cpp */,
+				3B48A08419A8DCAD00264071 /* CVertexBatch.h */,
 				3B1EE6291940EB2500503B9F /* CVertexBuffer.cpp */,
 				3B1EE62A1940EB2500503B9F /* CVertexBuffer.h */,
 				3B14619618BE9E6400AE5E43 /* CShader.cpp */,
 				3B14619718BE9E6400AE5E43 /* CShader.h */,
 				3B25B46B1944A3D400E3E4A5 /* CTexture.cpp */,
 				3B25B46C1944A3D400E3E4A5 /* CTexture.h */,
+				3BA1079D1945D68F006B2AC4 /* CPrimitives.cpp */,
+				3BA1079E1945D68F006B2AC4 /* CPrimitives.h */,
+				3B337B80199C165300FCBE99 /* CTypes.cpp */,
+				3B337B81199C165300FCBE99 /* CTypes.h */,
+				3B48A08619A8DD4D00264071 /* Notes */,
 			);
 			path = osxtest;
 			sourceTree = "<group>";
@@ -727,8 +768,11 @@
 			files = (
 				3B14619818BE9E6400AE5E43 /* CShader.cpp in Sources */,
 				3B25B46D1944A3D400E3E4A5 /* CTexture.cpp in Sources */,
+				3BA1079F1945D68F006B2AC4 /* CPrimitives.cpp in Sources */,
+				3B48A08519A8DCAD00264071 /* CVertexBatch.cpp in Sources */,
 				3B1EE62B1940EB2500503B9F /* CVertexBuffer.cpp in Sources */,
 				3BFEEBC6188880E200AA90C9 /* main.cpp in Sources */,
+				3B337B82199C165300FCBE99 /* CTypes.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -766,6 +810,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -798,6 +846,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				SDKROOT = macosx;
 			};
@@ -810,6 +862,15 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/devel/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/devel/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -820,6 +881,15 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/devel/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/devel/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

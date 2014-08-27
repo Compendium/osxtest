@@ -15,6 +15,7 @@
 #include <vector>
 #include <OpenGL/gl.h>
 #include <SDL2/SDL.h>
+#include <SDL2_image/SDL_image.h>
 
 class CTexture {
 private:
@@ -25,7 +26,8 @@ private:
 public:
 	CTexture();
 	~CTexture();
-	void set(SDL_Surface * surface);
+	void load(SDL_Surface * surface);
+	void load(std::string path);
 	
 	int getref();
 	int getWidth();

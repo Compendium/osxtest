@@ -110,7 +110,7 @@ bool CShader::compile(std::string vertpath, std::string fragpath) {
 			printf("[%i] Error while validating shaderprogram: %s", program_ref, msgbuffer);
 		}
 	}
-	
+	glUseProgram(0);
 	return true;
 }
 

@@ -22,6 +22,8 @@
 #include "CShader.h"
 #include "CVertexBuffer.h"
 #include "CTexture.h"
+#include "CPrimitives.h"
+#include "CVertexBatch.h"
 
 using namespace std;
 
@@ -65,7 +67,7 @@ int main(int argc, const char * argv[])
 	int w, h, pw, ph;
 	SDL_GetWindowSize(window, &w, &h);
 	SDL_GL_GetDrawableSize(window, &pw, &ph);
-	printf("winodwsize: %ix%i (actual: %ix%i)\n", w, h, pw, ph);
+	printf("winodwsize: %ix%i (physical: %ix%i)\n", w, h, pw, ph);
 	
 	if(TTF_Init()==-1) {
 		printf("TTF_Init: %s\n", TTF_GetError());
@@ -88,9 +90,13 @@ int main(int argc, const char * argv[])
 	
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
+	glEnable(GL_SMOOTH);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_MULTISAMPLE);
-	glEnable(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
+	glFrontFace(GL_CCW);
+	glCullFace(GL_BACK);
+	glEnable (GL_DEPTH_TEST);
 	
 	
 	// Render some UTF8 text in solid white to a new surface
@@ -98,6 +104,8 @@ int main(int argc, const char * argv[])
 	// then free the text surface
 	SDL_Color color={255,255,255};
 	SDL_Surface *surface;
+	
+	CVertexBatch cvb;
 
 	string text = "こんにちは！";
 	string renderer =
@@ -122,7 +130,7 @@ int main(int argc, const char * argv[])
 		std::printf("TTF_RenderUTF8_Blended_Wrapped error; %s\n",
 					TTF_GetError());
 	} else {
-		texttex->set(surface);
+		texttex->load(surface);
 		SDL_FreeSurface(surface);
 	}
 	
@@ -145,84 +153,52 @@ int main(int argc, const char * argv[])
 	const unsigned int attrib_texpos = glGetAttribLocation(textShader->getref(), "attrib_texpos");
 	
 	CVertexBuffer * interfaceBuffer = new CVertexBuffer();
-	
-	interfaceBuffer->add(0, 0, 0);
-	interfaceBuffer->add(0, 1);
-	interfaceBuffer->add(texttex->getWidth(), 0, 0);
-	interfaceBuffer->add(1, 1);
-	interfaceBuffer->add(0, texttex->getHeight(), 0);
-	interfaceBuffer->add(0, 0);
-	
-	interfaceBuffer->add(texttex->getWidth(), texttex->getHeight(), 0);
-	interfaceBuffer->add(1, 0);
-	interfaceBuffer->add(0, texttex->getHeight(), 0);
-	interfaceBuffer->add(0, 0);
-	interfaceBuffer->add(texttex->getWidth(), 0, 0);
-	interfaceBuffer->add(1, 1);
-	
-	interfaceBuffer->upload();
-	
+	interfaceBuffer->reserve(15*2);
 	interfaceBuffer->addAttribPointer(attrib_vertpos, 3, 5, 0);
 	interfaceBuffer->addAttribPointer(attrib_texpos, 2, 5, 3);
 	
-	CShader * pShader = new CShader();
-	pShader->compile("resources/p.vert", "resources/p.frag");
-	
 	glm::mat4 pProjection = glm::perspectiveFov(90.0f, (float)pw, (float)ph, 1.0f, 1000.0f);
-    glm::mat4 pViewTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.0f));
+    glm::mat4 pViewTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -6.0f));
     glm::mat4 pView = pViewTranslate;
-    glm::mat4 pModel = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+	pView = glm::scale(pView, glm::vec3(4.5f));
+    glm::mat4 pModel = glm::scale(glm::mat4(1.0f), glm::vec3(1.5f));
+	//pModel = glm::translate(pModel, glm::vec3(0.5f, 0.5f, 0.5f));
     glm::mat4 pMVP = pProjection * pView * pModel;
     
-    int puniform_matrix_mvp = glGetUniformLocation(pShader->getref(), "umvp");
-    int puniform_deltatime = glGetUniformLocation(pShader->getref(), "udt");
-    
-    const unsigned int pshaderAttributeVertPos = glGetAttribLocation(pShader->getref(), "attrib_vertexpos");
-	const unsigned int pshaderAttributeVertCol = glGetAttribLocation(pShader->getref(), "attrib_vertexcolor");
-    
-	CVertexBuffer * vb = new CVertexBuffer();
-	vb->add(1, 0, 0); vb->add(1, 0, 0);
-	vb->add(0, 0, 0); vb->add(1, 0, 0);
-	vb->add(0, 1, 0); vb->add(1, 0, 0);
-	
-	vb->add(0, 1, 0); vb->add(1, 0, 0);
-	vb->add(1, 1, 0); vb->add(1, 0, 0);
-	vb->add(1, 0, 0); vb->add(1, 0, 0);
-	//----
-	vb->add(1, 0, 1); vb->add(0, 1, 0);
-	vb->add(0, 1, 1); vb->add(0, 1, 0);
-	vb->add(0, 0, 1); vb->add(0, 1, 0);
-	
-	vb->add(1, 0, 1); vb->add(0, 1, 0);
-	vb->add(1, 1, 1); vb->add(0, 1, 0);
-	vb->add(0, 1, 1); vb->add(0, 1, 0);
-	//----
-	vb->add(1, 0, 1); vb->add(1, 1, 0);
-	vb->add(1, 0, 0); vb->add(1, 1, 0);
-	vb->add(1, 1, 0); vb->add(1, 1, 0);
-	
-	vb->add(1, 1, 0); vb->add(1, 1, 0);
-	vb->add(1, 1, 1); vb->add(1, 1, 0);
-	vb->add(1, 0, 1); vb->add(1, 1, 0);
-	//----
-	vb->add(0, 1, 0); vb->add(0, 1, 1);
-	vb->add(0, 0, 0); vb->add(0, 1, 1);
-	vb->add(0, 0, 1); vb->add(0, 1, 1);
-	
-	vb->add(0, 0, 1); vb->add(0, 1, 1);
-	vb->add(0, 1, 1); vb->add(0, 1, 1);
-	vb->add(0, 1, 0); vb->add(0, 1, 1);
-	
-	vb->upload();
-	vb->addAttribPointer(pshaderAttributeVertPos, 3, 6, 0);
-	vb->addAttribPointer(pshaderAttributeVertCol, 3, 6, 3);
-	
 	SDL_Event e;
 	bool keeprunning = true;
 	int framecount = 0;
+	int drawcalls = 0;
 
 	clock_t t = clock();
 	float timediff;
+	
+	CTexture cubetex = CTexture();
+	cubetex.load("resources/boxtest.png");
+	
+	vec4 colors [] = {vec4(1, 0, 0, 1), vec4(0, 1, 0, 1), vec4(0, 0, 1, 1), vec4(1, 1, 1, 1),
+	vec4(1, 1, 0, 1), vec4(1, 0, 1, 1), vec4(0, 1, 1, 1), vec4(0, 0, 0, 1)};
+	
+	//cvb.addColoredCube(&pModel, &pView, &pProjection, vec3(0,0.5,0), vec3(1,1,1), colors);
+	//cvb.addColoredCube(&pModel, &pView, &pProjection, vec3(5,0,0), vec3(1,1,1), colors);
+	
+	vec2 texfront [] = {vec2(0, 0), vec2(0, 0)};
+	vec2 texback [] = {vec2(0, 0), vec2(0, 0)};
+	vec2 texleft [] = {vec2(0, 0), vec2(0, 0)};
+	vec2 texright [] = {vec2(0, 0), vec2(0, 0)};
+	vec2 texbot [] = {vec2(0, 0), vec2(0, 0)};
+	vec2 textop [] = {vec2(0, 0), vec2(0, 0)};
+	
+	//cvb.addTexturedCube(&pModel, &pView, &pProjection, vec3(0, 0.2, 0), vec3(1,1,1), &cubetex, texfront, texback, texleft, texright, textop, texbot);
+	cvb.addTexturedCube(&pModel, &pView, &pProjection, vec3(0, 2, 0), vec3(1,1,1), &cubetex, texfront, texback, texleft, texright, textop, texbot);
+	cvb.addTexturedCube(&pModel, &pView, &pProjection, vec3(0, -2, 0), vec3(1,1,1), &cubetex, texfront, texback, texleft, texright, textop, texbot);
+	//cvb.addColoredCube(&pModel, &pView, &pProjection, vec3(2.0,0,0), vec3(1,1,1), colors);
+	//cvb.addTexturedCube(&pModel, &pView, &pProjection, vec3(-1, -0.2, 0), vec3(1,1,1), &cubetex, texfront, texback, texleft, texright, textop, texbot);
+
+
+	cvb.addColoredCube(&pModel, &pView, &pProjection, vec3(1.0,0,0), vec3(1,1,1), colors);
+	//cvb.addColoredCube(&pModel, &pView, &pProjection, vec3(3.0,0,0), vec3(1,1,1), colors);
+	//cvb.addColoredCube(&pModel, &pView, &pProjection, vec3(4.0,0,0), vec3(1,1,1), colors);
 	
 	while (keeprunning) {
 		t = clock();
@@ -247,6 +223,9 @@ int main(int argc, const char * argv[])
 		text += std::to_string(timediff);
 		text += " fc: ";
 		text += std::to_string(framecount);
+		text += " drawcalls: ";
+		text += std::to_string(drawcalls);
+		drawcalls = 0;
 		
 		//int TTF_SizeUTF8(TTF_Font *font, const char *text, int *w, int *h)
 		surface=TTF_RenderUTF8_Blended_Wrapped(font, text.c_str(), color, pw);
@@ -255,7 +234,7 @@ int main(int argc, const char * argv[])
 			std::printf("TTF_RenderUTF8_Blended_Wrapped error; %s\n",
 						TTF_GetError());
 		} else {
-			texttex->set(surface);
+			texttex->load(surface);
 			SDL_FreeSurface(surface);
 		}
 		
@@ -274,15 +253,14 @@ int main(int argc, const char * argv[])
 		interfaceBuffer->add(1, 1);
 		interfaceBuffer->upload();
 		
-		
+		int mousex, mousey;
+		SDL_GetMouseState(&mousex, &mousey);
 		//update loop -- first work all the events
 		while (SDL_PollEvent(&e) != 0) {
 			if(e.type == SDL_KEYDOWN || e.type == SDL_QUIT)
 				keeprunning = false;
 		}//then do all the not-event stuff
 		{
-			int mousex, mousey;
-			SDL_GetMouseState(&mousex, &mousey);
 			int windowwidth, windowheight;
 			SDL_GetWindowSize(window, &windowwidth, &windowheight);
 			if(mousex < windowwidth * 0.1) {
@@ -296,9 +274,15 @@ int main(int argc, const char * argv[])
 				MVP = glm::translate(MVP, glm::vec3(0.0f, 1.0f, 0.0f));
 			}
 		}
-		pModel = glm::rotate(pModel, 0.050f, glm::vec3(0.f, 1.f, 0.f));
-		pModel = glm::rotate(pModel, 0.05f, glm::vec3(1.f, 0.f, 0.f));
-		pModel = glm::rotate(pModel, 0.005f, glm::vec3(0.f, 0.f, 1.f));
+		
+		pModel = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+		
+		//pModel = glm::rotate(pModel, 0.050f + framecount/35.0f, glm::vec3(.25f, 1.f, 0.f));
+		pModel = glm::rotate(pModel, 0.050f + mousex/35.0f, glm::vec3(0.f, 1.f, 0.f));
+		//pModel = glm::rotate(pModel, 0.5f, glm::vec3(1.f, 0.f, 0.f));
+		//pModel = glm::rotate(pModel, 0.005f, glm::vec3(0.f, 0.f, 1.f));
+		//pModel = glm::translate(pModel, glm::vec3(-0.5f, -0.5f, -0.5f));
+
 		pMVP = pProjection * pView * pModel;
 		
 		//render loop
@@ -314,19 +298,13 @@ int main(int argc, const char * argv[])
 			glBindTexture(GL_TEXTURE_2D, texttex->getref());
 			glUniform1i(glGetUniformLocation(textShader->getref(), "colorMap"), 0);
 			glUniform4f(glGetUniformLocation(textShader->getref(), "tint"), itof(0xF2), itof(0xEF), itof(0xDC), 1);
-			
+
 			interfaceBuffer->enable();
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 			interfaceBuffer->disable();
 			
 			
-			glUseProgram(pShader->getref());
-            glUniformMatrix4fv(puniform_matrix_mvp, 1, GL_FALSE, glm::value_ptr(pMVP));
-            glUniform1f(puniform_deltatime, SDL_GetTicks());
-			
-			vb->enable();
-            glDrawArrays(GL_TRIANGLES, 0, 24);
-			vb->disable();
+			drawcalls += cvb.draw();
 
 			
 			SDL_GL_SwapWindow(window);

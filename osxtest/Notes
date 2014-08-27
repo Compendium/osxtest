@@ -1,0 +1,7 @@
+CVertexBuffer->addAttribPointer(int ap_gl_id, int size, int stride, int offset);
+glUseProgram
+glUniformMatrix
+glActiveTexture
+CVertexBuffer->enable();
+glDrawArrays();
+CVertexBuffer->disable();

@@ -29,7 +29,7 @@ int CTexture::getHeight() {
 	return height;
 }
 
-void CTexture::set(SDL_Surface * surface) {
+void CTexture::load(SDL_Surface * surface) {
 	int text_width = 0, text_height = 0;
 	GLenum texture_format = -1;
 	GLint  nOfColors;
@@ -77,4 +77,17 @@ void CTexture::set(SDL_Surface * surface) {
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, surface->w, surface->h, 0, texture_format, GL_UNSIGNED_BYTE, surface->pixels);
 	
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void CTexture::load(std::string path) {
+	SDL_Surface* image;
+	image = IMG_Load(path.c_str());
+	if (image == NULL)
+	{
+		std::cerr << "SDL_LoadBMP() Failed: " << SDL_GetError() << std::endl;
+	} else {
+		printf("loaded image %s\n", path.c_str());
+	}
+	load(image);
+	SDL_FreeSurface(image);
 }
