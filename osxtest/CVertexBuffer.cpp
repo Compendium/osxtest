@@ -91,13 +91,13 @@ void CVertexBuffer::replace(int offset) {
 }
 
 void CVertexBuffer::addAttribPointer(int ap_gl_id, int size, int stride, int offset){
-	/*SVertexAttrib sva = SVertexAttrib();
+	SVertexAttrib sva = SVertexAttrib();
 	sva.attrib_id = ap_gl_id;
 	sva.elements = size;
 	sva.stride = stride;
 	sva.offset = offset;
 	
-	vertex_attribs.push_back(sva);*/
+	vertex_attribs.push_back(sva);
 }
 
 unsigned int CVertexBuffer::getCount() {
@@ -106,16 +106,16 @@ unsigned int CVertexBuffer::getCount() {
 
 void CVertexBuffer::enable (){
 	glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
-	/*for(SVertexAttrib sva : vertex_attribs) {
+	for(SVertexAttrib sva : vertex_attribs) {
 		glEnableVertexAttribArray(sva.attrib_id);
 		glVertexAttribPointer(sva.attrib_id, sva.elements, GL_FLOAT, GL_FALSE,
 							  sva.stride*sizeof(float), (void*)(sva.offset*sizeof(float)));
-	}*/
+	}
 }
 
 void CVertexBuffer::disable (){
-	/*for(SVertexAttrib sva : vertex_attribs) {
+	for(SVertexAttrib sva : vertex_attribs) {
 		glDisableVertexAttribArray(sva.attrib_id);
-	}*/
+	}
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

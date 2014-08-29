@@ -18,13 +18,13 @@ using namespace glm;
 
 class CVertexBuffer {
 private:
-	/*struct SVertexAttrib {
+	struct SVertexAttrib {
 		int attrib_id;
 		int elements;
 		int stride;
 		int offset;
 	};
-	std::vector<SVertexAttrib> vertex_attribs;*/
+	std::vector<SVertexAttrib> vertex_attribs;
 	std::vector<float> fv;
 	unsigned int buffer_id;
 	bool replacemode;

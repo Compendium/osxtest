@@ -96,7 +96,7 @@ int main(int argc, const char * argv[])
 	glDisable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 	glCullFace(GL_BACK);
-	glEnable (GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 	
 	
 	// Render some UTF8 text in solid white to a new surface
@@ -174,7 +174,7 @@ int main(int argc, const char * argv[])
 	float timediff;
 	
 	CTexture cubetex = CTexture();
-	cubetex.load("resources/boxtest.png");
+	cubetex.load("resources/logo.png");
 	
 	vec4 colors [] = {vec4(1, 0, 0, 1), vec4(0, 1, 0, 1), vec4(0, 0, 1, 1), vec4(1, 1, 1, 1),
 	vec4(1, 1, 0, 1), vec4(1, 0, 1, 1), vec4(0, 1, 1, 1), vec4(0, 0, 0, 1)};
