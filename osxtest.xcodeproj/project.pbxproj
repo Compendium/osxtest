@@ -27,6 +27,8 @@
 		3B5B6241188C66280058FC38 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B5B6240188C66280058FC38 /* OpenGL.framework */; };
 		3B9D44B119AFBC6800A62325 /* CPrimitives.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B9D44AF19AFBC6800A62325 /* CPrimitives.cpp */; };
 		3B9D44B319AFF46B00A62325 /* logo.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3B9D44B219AFF44F00A62325 /* logo.png */; };
+		3B9D44B619B11C3A00A62325 /* COBJFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B9D44B419B11C3A00A62325 /* COBJFile.cpp */; };
+		3BB1289919B2239C00961515 /* untitled.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3BB1289819B2239600961515 /* untitled.obj */; };
 		3BE1A82018A19DB8009D18C0 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BE1A81F18A19DB8009D18C0 /* SDL2_ttf.framework */; };
 		3BE1A82418A1A2E9009D18C0 /* arial.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3BE1A82318A1A2E2009D18C0 /* arial.ttf */; };
 		3BFEEBC6188880E200AA90C9 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3BFEEBC5188880E200AA90C9 /* main.cpp */; };
@@ -39,6 +41,7 @@
 			dstPath = resources;
 			dstSubfolderSpec = 7;
 			files = (
+				3BB1289919B2239C00961515 /* untitled.obj in CopyFiles */,
 				3B9D44B319AFF46B00A62325 /* logo.png in CopyFiles */,
 				3B2DCA2619ABDF2200F933AF /* boxtest.png in CopyFiles */,
 				3B48A08B19AA5FCB00264071 /* basic_color_shader.frag in CopyFiles */,
@@ -344,6 +347,9 @@
 		3B9D44AF19AFBC6800A62325 /* CPrimitives.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CPrimitives.cpp; sourceTree = "<group>"; };
 		3B9D44B019AFBC6800A62325 /* CPrimitives.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPrimitives.h; sourceTree = "<group>"; };
 		3B9D44B219AFF44F00A62325 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		3B9D44B419B11C3A00A62325 /* COBJFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = COBJFile.cpp; sourceTree = "<group>"; };
+		3B9D44B519B11C3A00A62325 /* COBJFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = COBJFile.h; sourceTree = "<group>"; };
+		3BB1289819B2239600961515 /* untitled.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = untitled.obj; sourceTree = "<group>"; };
 		3BE1A81F18A19DB8009D18C0 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = ../../../../../Library/Frameworks/SDL2_ttf.framework; sourceTree = "<group>"; };
 		3BE1A82318A1A2E2009D18C0 /* arial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = arial.ttf; sourceTree = "<group>"; };
 		3BFEEBC2188880E200AA90C9 /* osxtest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = osxtest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -368,6 +374,7 @@
 		3B18F3C4189EDBD7004FD6FB /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				3BB1289819B2239600961515 /* untitled.obj */,
 				3B9D44B219AFF44F00A62325 /* logo.png */,
 				3B2DCA2519ABDF0700F933AF /* boxtest.png */,
 				3B48A08719AA5E6600264071 /* basic_color_shader.frag */,
@@ -714,6 +721,8 @@
 				3B337B80199C165300FCBE99 /* CTypes.cpp */,
 				3B337B81199C165300FCBE99 /* CTypes.h */,
 				3B48A08619A8DD4D00264071 /* Notes */,
+				3B9D44B419B11C3A00A62325 /* COBJFile.cpp */,
+				3B9D44B519B11C3A00A62325 /* COBJFile.h */,
 			);
 			path = osxtest;
 			sourceTree = "<group>";
@@ -773,6 +782,7 @@
 				3B14619818BE9E6400AE5E43 /* CShader.cpp in Sources */,
 				3B25B46D1944A3D400E3E4A5 /* CTexture.cpp in Sources */,
 				3B48A08519A8DCAD00264071 /* CVertexBatch.cpp in Sources */,
+				3B9D44B619B11C3A00A62325 /* COBJFile.cpp in Sources */,
 				3B1EE62B1940EB2500503B9F /* CVertexBuffer.cpp in Sources */,
 				3BFEEBC6188880E200AA90C9 /* main.cpp in Sources */,
 				3B337B82199C165300FCBE99 /* CTypes.cpp in Sources */,

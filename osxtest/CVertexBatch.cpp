@@ -206,6 +206,63 @@ int CVertexBatch::addTexturedCube(mat4 *m, mat4 *v, mat4 *p, vec3 pos, vec3 dim,
 	return vertexcount;
 }
 
+int CVertexBatch::addObject(mat4 *m, mat4 *v, mat4 *p, CTexture * texture, string path, string vshader, string fshader, string texpath) {
+	int vertexcount = 0;
+	
+	Entry_meta meta;
+	meta.vertex_buffer = &vertex_buffer;
+	meta.shader = &basic_texture_shader;
+	
+	int offset = 0;
+	for(int i = 0; i < batch_entries.size(); i++)
+		offset += batch_entries[i].vertex_count;
+	meta.vertex_offset = offset;
+	meta.shader = &basic_texture_shader;
+	meta.vertex_buffer = &vertex_buffer;
+	meta.model = m;
+	meta.view = v;
+	meta.projection = p;
+	meta.texture = texture;
+	
+	CVertexBuffer * vb = meta.vertex_buffer;
+	int vboffset = vb->getCount();
+	
+	COBJFile obj;
+	obj.parse(path);
+	for(int n = 0; n < obj.faces.size(); n++){
+		vb->add(obj.vertices[obj.faces[n].n1]);vb->add(0,0);
+		vb->add(obj.vertices[obj.faces[n].n2]);vb->add(0,0);
+		vb->add(obj.vertices[obj.faces[n].n3]);vb->add(0,0);
+	}
+		
+	//printf("%i ::: %f %f %f\n", obj.faces[n].n1, obj.vertices[obj.faces[n].n1].x, obj.vertices[obj.faces[n].n1].y, obj.vertices[obj.faces[n].n1].z);
+	
+	meta.vertex_count = (unsigned int)(obj.faces.size() * 3);
+	
+	vb->upload();
+	
+	unsigned int pshaderAttributeVertPos = glGetAttribLocation(meta.shader->getref(), "attrib_vertexpos");
+	SVertexAttrib positionattrib;
+	positionattrib.attrib_id = pshaderAttributeVertPos;
+	positionattrib.elements = 3; //xyz
+	positionattrib.stride = 5;//xyzuv
+	positionattrib.offset = vboffset + 0;
+	
+	unsigned int pshaderAttributeVertCol = glGetAttribLocation(meta.shader->getref(), "attrib_vertexuv");
+	SVertexAttrib colorattrib;
+	colorattrib.attrib_id = pshaderAttributeVertCol;
+	colorattrib.elements = 2;//uv
+	colorattrib.stride = 5;//xyzuv
+	colorattrib.offset = vboffset + 3; //xyz
+	
+	meta.vertex_attribs.push_back(positionattrib);
+	meta.vertex_attribs.push_back(colorattrib);
+	
+	batch_entries.push_back(meta);
+	
+	return vertexcount;
+}
+
 int CVertexBatch::draw(){
 	int glcalls = 0;
 	vertex_buffer.upload();

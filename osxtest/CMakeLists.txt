@@ -27,5 +27,5 @@ TARGET_LINK_LIBRARIES(gametestexec ${SDL2TTF_LIBRARIES})
 include_directories(./glm)
 TARGET_LINK_LIBRARIES(gametestexec ${OPENGL_LIBRARIES})
 
-file(COPY ./resources DESTINATION ./)
+file(COPY ${CMAKE_SOURCE_DIR}/resources DESTINATION ${CMAKE_BINARY_DIR})
 #todo cleanup!

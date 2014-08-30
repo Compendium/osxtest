@@ -22,6 +22,8 @@
 #include "CShader.h"
 #include "CTexture.h"
 
+#include "COBJFile.h"
+
 using namespace std;
 using namespace glm;
 
@@ -41,7 +43,7 @@ private:
 	struct Entry_meta {
 		vector<SVertexAttrib> vertex_attribs;
 		int vertex_offset;
-		int vertex_count;
+		unsigned int vertex_count;
 		
 		CShader * shader;
 		CVertexBuffer * vertex_buffer;
@@ -79,6 +81,14 @@ public:
 	int addColoredCube (mat4 * m, mat4 * v, mat4 * p, vec3 pos, vec3 dim, vec4 color[]);
 	
 	int addTexturedCube (mat4 * m, mat4 * v, mat4 * p, vec3 pos, vec3 dim, CTexture * texture, vec2 texfront[], vec2 texback[], vec2 texleft[], vec2 texright[], vec2 textop[], vec2 texbot[]);
+	
+	//add .obj
+	int addObject (mat4 *m, mat4 *v, mat4 *p, CTexture * texture, string path, string vshader, string fshader, string texpath);
+	
+	//add .obj with meta file that has information about where .obj/.frag/.vert/.png is
+	int addMeta (mat4 *m, mat4 *v, mat4 *p, string path);
+	
+	
 	
 	/* 
 	 draws all the entries currently in the batch

@@ -24,6 +24,7 @@
 #include "CTexture.h"
 #include "CPrimitives.h"
 #include "CVertexBatch.h"
+#include "COBJFile.h"
 
 using namespace std;
 
@@ -190,15 +191,20 @@ int main(int argc, const char * argv[])
 	vec2 textop [] = {vec2(0, 0), vec2(0, 0)};
 	
 	//cvb.addTexturedCube(&pModel, &pView, &pProjection, vec3(0, 0.2, 0), vec3(1,1,1), &cubetex, texfront, texback, texleft, texright, textop, texbot);
-	cvb.addTexturedCube(&pModel, &pView, &pProjection, vec3(0, 2, 0), vec3(1,1,1), &cubetex, texfront, texback, texleft, texright, textop, texbot);
-	cvb.addTexturedCube(&pModel, &pView, &pProjection, vec3(0, -2, 0), vec3(1,1,1), &cubetex, texfront, texback, texleft, texright, textop, texbot);
+	//cvb.addTexturedCube(&pModel, &pView, &pProjection, vec3(0, 2, 0), vec3(1,1,1), &cubetex, texfront, texback, texleft, texright, textop, texbot);
+	//cvb.addTexturedCube(&pModel, &pView, &pProjection, vec3(0, -2, 0), vec3(1,1,1), &cubetex, texfront, texback, texleft, texright, textop, texbot);
 	//cvb.addColoredCube(&pModel, &pView, &pProjection, vec3(2.0,0,0), vec3(1,1,1), colors);
 	//cvb.addTexturedCube(&pModel, &pView, &pProjection, vec3(-1, -0.2, 0), vec3(1,1,1), &cubetex, texfront, texback, texleft, texright, textop, texbot);
 
 
-	cvb.addColoredCube(&pModel, &pView, &pProjection, vec3(1.0,0,0), vec3(1,1,1), colors);
+	//cvb.addColoredCube(&pModel, &pView, &pProjection, vec3(1.0,0,0), vec3(1,1,1), colors);
 	//cvb.addColoredCube(&pModel, &pView, &pProjection, vec3(3.0,0,0), vec3(1,1,1), colors);
 	//cvb.addColoredCube(&pModel, &pView, &pProjection, vec3(4.0,0,0), vec3(1,1,1), colors);
+	
+	COBJFile cobj;
+	//cobj.parse("resources/untitled.obj");
+	
+	cvb.addObject(&pModel, &pView, &pProjection, &cubetex, "resources/untitled.obj", "", "", "");
 	
 	while (keeprunning) {
 		t = clock();
